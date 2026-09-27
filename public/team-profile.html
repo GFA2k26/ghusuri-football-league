@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GFL Team Profile</title>
+
+<style>
+:root{
+  --navy:#08264d;
+  --navy2:#0d3568;
+  --blue:#1769aa;
+  --blue-soft:#eaf3fb;
+  --ink:#12243a;
+  --muted:#64748b;
+  --line:#d7e2ee;
+  --line2:#b8c9db;
+  --bg:#f5f8fc;
+  --white:#fff;
+  --pink:#b52b57;
+  --pink-dark:#922044;
+  --green:#147a55;
+  --green-soft:#e9f7f0;
+  --shadow:0 12px 32px rgba(8,38,77,.08);
+  --radius:18px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+}
+
+a{
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:800;
+}
+a:hover{text-decoration:underline}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:0 28px;
+}
+
+/* GFL navigation */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(255,255,255,.97);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+
+.topbar-inner{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brand-mark{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:var(--navy);
+  color:#fff;
+  font-size:20px;
+  font-weight:900;
+}
+
+.brand-text strong{
+  display:block;
+  color:var(--navy);
+  font-size:16px;
+}
+
+.brand-text small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  margin-top:2px;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  flex-wrap:wrap;
+}
+
+.nav-links a{
+  color:#3c5068;
+  padding:8px 9px;
+  border-radius:9px;
+  font-size:12px;
+}
+
+.nav-links a:hover{
+  background:var(--blue-soft);
+  color:var(--navy);
+  text-decoration:none;
+}
+
+.nav-btn{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  padding:9px 13px!important;
+  border-radius:9px;
+  background:var(--navy);
+  color:#fff!important;
+  border:1px solid var(--navy);
+}
+
+.nav-btn.ghost{
+  background:#fff;
+  color:var(--navy)!important;
+  border-color:var(--line2);
+}
+
+.nav-toggle{
+  display:none;
+  background:var(--navy);
+  color:#fff;
+  border:0;
+  padding:9px 12px;
+  border-radius:9px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.mobile-nav{
+  display:none;
+  border-top:1px solid var(--line);
+  padding:8px 15px;
+  gap:5px;
+  overflow:auto;
+  background:#fff;
+}
+
+.mobile-nav a{
+  white-space:nowrap;
+  padding:8px 10px;
+  border-radius:8px;
+  color:#3c5068;
+  font-size:12px;
+}
+
+.mobile-nav a:hover{
+  background:var(--blue-soft);
+  text-decoration:none;
+}
+
+/* Team page */
+main{
+  padding-top:28px;
+  padding-bottom:45px;
+}
+
+.back{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:14px;
+  color:var(--navy);
+  font-size:13px;
+}
+
+.hero{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:24px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+
+.hero:before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:5px;
+  background:var(--navy);
+}
+
+.team-hero{
+  display:flex;
+  align-items:center;
+  gap:22px;
+  padding-top:28px;
+}
+
+.logo{
+  width:120px;
+  height:120px;
+  object-fit:contain;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:7px;
+  box-shadow:0 8px 20px rgba(8,38,77,.08);
+}
+
+.team-info h1{
+  margin:0 0 8px;
+  color:var(--navy);
+  font-size:34px;
+  line-height:1.1;
+}
+
+.team-info p{
+  margin:7px 0;
+}
+
+.muted{color:var(--muted)}
+
+.pill{
+  display:inline-block;
+  background:var(--blue-soft);
+  color:var(--navy);
+  border:1px solid #cfe1ef;
+  border-radius:99px;
+  padding:6px 10px;
+  font-size:11px;
+  font-weight:850;
+  margin-top:7px;
+}
+
+.players-card{
+  margin-top:18px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:var(--shadow);
+}
+
+.section-heading{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:16px;
+}
+
+.section-heading h2{
+  color:var(--navy);
+  margin:0;
+  font-size:23px;
+}
+
+.section-heading p{
+  color:var(--muted);
+  margin:5px 0 0;
+  font-size:12px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;
+}
+
+.player{
+  display:block;
+  color:inherit;
+  text-decoration:none;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:16px;
+  box-shadow:0 7px 18px rgba(8,38,77,.055);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+
+.player:hover{
+  transform:translateY(-3px);
+  border-color:#9ebbd2;
+  box-shadow:0 12px 25px rgba(8,38,77,.09);
+  text-decoration:none;
+}
+
+.player-head{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.avatar{
+  width:64px;
+  height:76px;
+  border-radius:11px;
+  object-fit:cover;
+  background:#eef4f9;
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  color:#8a9aae;
+  font-size:22px;
+  flex:none;
+}
+
+.player-name{
+  color:var(--navy);
+  font-size:14px;
+  font-weight:900;
+}
+
+.player-meta{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.stats{
+  margin-top:11px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+  font-size:11px;
+  color:var(--muted);
+}
+
+.view-profile{
+  display:inline-block;
+  margin-top:9px;
+  color:var(--blue);
+  font-size:11px;
+  font-weight:900;
+}
+
+.empty{
+  padding:25px;
+  border:1px dashed var(--line2);
+  border-radius:12px;
+  background:#f9fbfd;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* Responsive */
+@media(max-width:1000px){
+  .nav-links{display:none}
+  .nav-toggle{display:inline-flex}
+  .mobile-nav.open{display:flex}
+}
+
+@media(max-width:650px){
+  .wrap{
+    padding-left:15px;
+    padding-right:15px;
+  }
+
+  .topbar-inner{
+    min-height:62px;
+  }
+
+  .brand-text small{
+    display:none;
+  }
+
+  main{
+    padding-top:18px;
+  }
+
+  .hero,
+  .players-card{
+    padding:17px;
+  }
+
+  .team-hero{
+    align-items:flex-start;
+    gap:15px;
+    padding-top:23px;
+  }
+
+  .logo{
+    width:85px;
+    height:85px;
+  }
+
+  .team-info h1{
+    font-size:26px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .player{transition:none}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+
+    <a class="brand" href="/">
+      <div class="brand-mark">⚽</div>
+      <div class="brand-text">
+        <strong>GHUSURI FOOTBALL LEAGUE</strong>
+        <small>Official GFL Team Profile</small>
+      </div>
+    </a>
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/#teams">Teams</a>
+      <a href="/#fixtures">Fixtures</a>
+      <a href="/#table">Points</a>
+      <a href="/#players">Players</a>
+      <a href="/#rules">Rule Book</a>
+      <a href="/#gallery">Gallery</a>
+      <a href="/#news">Notices</a>
+      <a class="nav-btn" href="/team.html">Team Login</a>
+      <a class="nav-btn ghost" href="/admin.html">Admin</a>
+    </nav>
+
+    <button class="nav-toggle" id="navToggle">MENU ☰</button>
+  </div>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="/">Home</a>
+    <a href="/#teams">Teams</a>
+    <a href="/#fixtures">Fixtures</a>
+    <a href="/#table">Points</a>
+    <a href="/#players">Players</a>
+    <a href="/#rules">Rule Book</a>
+    <a href="/#gallery">Gallery</a>
+    <a href="/#news">Notices</a>
+    <a href="/team.html">Team Login</a>
+    <a href="/admin.html">Admin</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <a class="back" href="/">← Back to GFL Home</a>
+
+  <div id="app" class="hero team-hero">
+    Loading team profile...
+  </div>
+
+</main>
+
+<script>
+const id=new URLSearchParams(location.search).get('id');
+const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+}[m]));
+
+fetch('/api/team/'+encodeURIComponent(id||''))
+.then(r=>r.json())
+.then(t=>{
+  if(t.error)throw Error(t.error);
+
+  document.title=t.team_name+' | GFL';
+
+  app.innerHTML=`
+    ${t.logo
+      ? `<img class="logo" src="/uploads/${t.logo}" alt="${esc(t.team_name)} logo">`
+      : ''
+    }
+
+    <div class="team-info">
+      <h1>${esc(t.team_name)}</h1>
+
+      <p class="muted">
+        ${esc(t.area||'')}
+        ${t.group_name?' • Group '+esc(t.group_name):''}
+      </p>
+
+      <p>${esc(t.description||'')}</p>
+
+      <span class="pill">
+        ${t.players.length} Approved Players
+      </span>
+    </div>
+  `;
+
+  const section=document.createElement('section');
+  section.className='players-card';
+
+  section.innerHTML=`
+    <div class="section-heading">
+      <div>
+        <h2>Player Profiles</h2>
+        <p>Approved players representing ${esc(t.team_name)}.</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      ${
+        t.players.map(p=>`
+          <a class="player" href="/player-profile.html?id=${p.id}">
+
+            <div class="player-head">
+
+              ${
+                p.photo_available
+                  ? `<img
+                      class="avatar"
+                      src="/api/public/player/${p.id}/photo"
+                      alt="${esc(p.name)}"
+                    >`
+                  : `<div class="avatar">⚽</div>`
+              }
+
+              <div>
+                <div class="player-name">${esc(p.name)}</div>
+
+                <div class="player-meta">
+                  Jersey ${p.jersey||'-'}
+                  • ${esc(p.position||'-')}
+                </div>
+              </div>
+
+            </div>
+
+            <div class="stats">
+              Matches ${p.matches||0}
+              • Goals ${p.goals||0}
+              • Assists ${p.assists||0}
+            </div>
+
+            <span class="view-profile">
+              View Player Profile →
+            </span>
+
+          </a>
+        `).join('')
+        || `<div class="empty">No approved players yet.</div>`
+      }
+    </div>
+  `;
+
+  document.querySelector('main').appendChild(section);
+
+})
+.catch(e=>{
+  app.className='hero error-card';
+
+  app.innerHTML=`
+    <div>
+      <h2 style="color:var(--navy)">Team not found</h2>
+      <p class="muted">${esc(e.message)}</p>
+      <a class="nav-btn" href="/">RETURN TO GFL HOME</a>
+    </div>
+  `;
+});
+
+document.getElementById('navToggle').onclick=()=>{
+  document.getElementById('mobileNav').classList.toggle('open');
+};
+
+document.querySelectorAll('#mobileNav a').forEach(a=>{
+  a.onclick=()=>document.getElementById('mobileNav').classList.remove('open');
+});
+</script>
+
+</body>
+</html>

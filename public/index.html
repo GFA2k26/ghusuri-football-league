@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GFL 2026</title>
+  <style>
+    :root {
+      --navy: #08264d;
+      --navy2: #0d3568;
+      --blue: #1769aa;
+      --blue-soft: #eaf3fb;
+      --ink: #12243a;
+      --muted: #64748b;
+      --line: #d7e2ee;
+      --line2: #b8c9db;
+      --bg: #f5f8fc;
+      --white: #fff;
+      --danger: #b4233c;
+      --shadow: 0 10px 28px rgba(8, 38, 77, .08);
+      --radius: 16px
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg)
+    }
+
+    a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    .wrap {
+      max-width: 1380px;
+      margin: auto;
+      padding: 0 28px
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, .97);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px)
+    }
+
+    .topbar-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 900;
+      font-size: 20px
+    }
+
+    .brand-text strong {
+      display: block;
+      color: var(--navy);
+      font-size: 16px
+    }
+
+    .brand-text small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      margin-top: 2px
+    }
+
+    .logo {
+      max-height: 44px;
+      max-width: 90px;
+      object-fit: contain
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: wrap
+    }
+
+    .nav-links a {
+      color: #3c5068;
+      padding: 8px 9px;
+      border-radius: 9px;
+      font-size: 12px
+    }
+
+    .nav-links a:hover {
+      background: var(--blue-soft);
+      color: var(--navy);
+      text-decoration: none
+    }
+
+    .btn,
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy);
+      color: #fff !important;
+      border: 1px solid var(--navy);
+      padding: 10px 14px;
+      border-radius: 9px;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(8, 38, 77, .12)
+    }
+
+    .btn:hover,
+    button:hover {
+      background: var(--navy2);
+      text-decoration: none
+    }
+
+    .ghost {
+      background: #fff;
+      color: var(--navy) !important;
+      border-color: var(--line2);
+      box-shadow: none
+    }
+
+    .ghost:hover {
+      background: #f3f7fb
+    }
+
+    .nav-toggle {
+      display: none
+    }
+
+    .mobile-nav {
+      display: none;
+      border-top: 1px solid var(--line);
+      padding: 8px 16px;
+      overflow: auto;
+      gap: 5px;
+      background: #fff
+    }
+
+    .mobile-nav a {
+      white-space: nowrap;
+      padding: 8px 10px;
+      color: #3c5068;
+      font-size: 12px;
+      border-radius: 8px
+    }
+
+    .mobile-nav a:hover {
+      background: var(--blue-soft);
+      text-decoration: none
+    }
+
+    .hero {
+      padding: 72px 0 52px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 35px
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      line-height: 1.05;
+      color: var(--navy);
+      margin: 10px 0
+    }
+
+    .hero p {
+      max-width: 700px
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 99px;
+      background: var(--blue-soft);
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 900
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 22px
+    }
+
+    .hero-badge {
+      width: 150px;
+      height: 150px;
+      border-radius: 28px;
+      background: #fff;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow)
+    }
+
+    .hero-badge img {
+      max-width: 115px;
+      max-height: 115px;
+      object-fit: contain
+    }
+
+    .section {
+      padding: 38px 0
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px
+    }
+
+    .section-head h2 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 25px
+    }
+
+    .section-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: .16s ease
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #a9c6df
+    }
+
+    .card h2,
+    .card h3 {
+      color: var(--navy)
+    }
+
+    .card h3 {
+      margin: 10px 0 6px
+    }
+
+    .team-logo {
+      width: 74px;
+      height: 70px;
+      object-fit: contain;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 4px
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 99px;
+      background: #edf3f8;
+      color: #42566b;
+      font-size: 11px;
+      font-weight: 850
+    }
+
+    .live {
+      background: #fff0f2;
+      color: var(--danger)
+    }
+
+    .table-wrap {
+      overflow: auto;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow)
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px
+    }
+
+    .table th {
+      background: #f4f8fb;
+      color: var(--navy);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .table th,
+    .table td {
+      padding: 11px 13px;
+      border-bottom: 1px solid var(--line);
+      text-align: left
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0
+    }
+
+    .input {
+      padding: 11px;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line2);
+      border-radius: 9px;
+      width: 100%;
+      outline: none
+    }
+
+    .input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(23, 105, 170, .11)
+    }
+
+    .search {
+      display: flex;
+      gap: 8px;
+      max-width: 650px
+    }
+
+    .notice {
+      border-left: 4px solid var(--blue)
+    }
+
+    .resource-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px
+    }
+
+    .resource-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 11px;
+      background: var(--blue-soft);
+      display: grid;
+      place-items: center;
+      color: var(--navy);
+      font-size: 20px
+    }
+
+    .gallery-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--line)
+    }
+
+    .registration-card {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff
+    }
+
+    .registration-card h2,
+    .registration-card p {
+      color: #fff
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding-top: 22px !important;
+      padding-bottom: 35px !important;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 10px
+    }
+
+    .hidden {
+      display: none
+    }
+
+    @media(max-width:1000px) {
+      .nav-links {
+        display: none
+      }
+
+      .nav-toggle {
+        display: inline-flex
+      }
+
+      .mobile-nav.open {
+        display: flex
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+
+      .hero-badge {
+        display: none
+      }
+    }
+
+    @media(max-width:650px) {
+      .wrap {
+        padding-left: 15px;
+        padding-right: 15px
+      }
+
+      .hero {
+        padding: 50px 0 35px
+      }
+
+      .hero h1 {
+        font-size: 35px
+      }
+
+      .search {
+        flex-direction: column
+      }
+
+      .section {
+        padding: 27px 0
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column
+      }
+
+      .grid {
+        grid-template-columns: 1fr
+      }
+
+      .topbar-inner {
+        min-height: 62px
+      }
+
+      .brand-text small {
+        display: none
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      html {
+        scroll-behavior: auto
+      }
+
+      .card {
+        transition: none
+      }
+
+      .card:hover {
+        transform: none
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="/">
+        <div class="brand-mark">⚽</div>
+        <div class="brand-text"><strong id="leagueName">GHUSURI FOOTBALL LEAGUE</strong><small>Official GFL 2026</small>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle">MENU ☰</button>
+      <nav class="nav-links">
+        <a href="#teams">Teams</a><a href="#fixtures">Fixtures</a><a href="#table">Points</a><a
+          href="#players">Players</a><a href="#rules">Rule Book</a><a href="#gallery">Gallery</a><a
+          href="#news">Notices</a>
+        <a class="btn" href="/team.html">Team Login</a><a class="btn ghost" href="/admin.html">Admin</a>
+      </nav>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="#teams">Teams</a><a href="#fixtures">Fixtures</a><a href="#table">Points</a><a
+        href="#players">Players</a><a href="#rules">Rule Book</a><a href="#gallery">Gallery</a><a
+        href="#news">Notices</a>
+      <a href="/team.html">Team Login</a><a href="/admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow" id="year">GFL 2026</span>
+          <h1>Ghusuri Football League</h1>
+          <p class="muted">Organised by Ghusuri Football Academy</p>
+          <div class="hero-actions"><a class="btn" href="#fixtures">VIEW FIXTURES</a><a class="btn ghost"
+              href="#players">PLAYER VERIFICATION</a></div>
+        </div>
+        <div class="hero-badge"><img id="leagueLogo" class="logo" alt="GFL"></div>
+      </div>
+    </section>
+
+    <section id="live" class="section"></section>
+    <section id="registration" class="section"></section>
+
+    <section id="teams" class="section">
+      <div class="section-head">
+        <div>
+          <h2>Teams</h2>
+          <p>Explore participating teams and their club profiles.</p>
+        </div>
+      </div>
+      <div id="teamGrid" class="grid"></div>
+    </section>
+
+    <section id="fixtures" class="section">
+      <div class="section-head">
+        <div>
+          <h2>Fixtures & Results</h2>
+          <p>Upcoming matches, completed results and live coverage.</p>
+        </div>
+      </div>
+      <div id="fixtureGrid" class="grid"></div>
+    </section>
+
+    <section id="table" class="section">
+      <div class="section-head">
+        <div>
+          <h2>Points Table</h2>
+          <p>Current standings from completed matches.</p>
+        </div>
+      </div>
+      <div id="standings"></div>
+    </section>
+
+    <section id="players" class="section">
+      <div class="section-head">
+        <div>
+          <h2>Player Verification</h2>
+          <p>Verify a registered player using the official GFL registration number.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="search"><input class="input" id="reg"
+            placeholder="Enter registration number, e.g. GFL-2026-0001"><button onclick="searchPlayer()">SEARCH</button>
+        </div>
+        <div id="playerResult" class="section"></div>
+      </div>
+    </section>
+
+    <section id="rules" class="section">
+      <div class="section-head">
+        <div>
+          <h2>GFL Rule Book</h2>
+          <p>Official league rules and regulations.</p>
+        </div>
+      </div>
+      <div id="rulebook"></div>
+    </section>
+
+    <section id="gallery" class="section">
+      <div class="section-head">
+        <div>
+          <h2>Photo Gallery</h2>
+          <p>Official GFL photographs and moments.</p>
+        </div>
+      </div>
+      <div id="galleryGrid" class="grid"></div>
+    </section>
+
+    <section id="news" class="section">
+      <div class="section-head">
+        <div>
+          <h2>Notices</h2>
+          <p>Official GFL announcements.</p>
+        </div>
+      </div>
+      <div id="newsGrid" class="grid"></div>
+    </section>
+  </main>
+
+  <footer class="wrap social">
+    <div><b style="color:var(--navy)">Ghusuri Football League</b> • GFL 2026</div>
+    <p id="socialLinks"></p>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').onclick = () => {
+      document.getElementById('mobileNav').classList.toggle('open');
+    };
+    document.querySelectorAll('#mobileNav a').forEach(a => {
+      a.onclick = () => document.getElementById('mobileNav').classList.remove('open');
+    });
+  </script>
+  <script>
+    const $ = id => document.getElementById(id);
+    async function get(u) {
+      const r = await fetch(u);
+      return r.json()
+    }
+
+    function esc(x) {
+      return String(x ?? '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[m]))
+    }
+    async function load() {
+      const [s, t, f, n, st, r] = await Promise.all([get('/api/settings'), get('/api/teams'), get('/api/fixtures'), get('/api/news'), get('/api/standings'), get('/api/resources')]);
+      $('leagueName').textContent = s.league_name || 'Ghusuri Football League';
+      $('year').textContent = 'GFL ' + (s.league_year || '2026');
+      if (s.league_logo) $('leagueLogo').src = '/uploads/' + s.league_logo;
+      $('teamGrid').innerHTML = t.map(x => `<a class=card href=/team-profile.html?id=${x.id} style="text-decoration:none;color:inherit">${x.logo ? `<img class=team-logo src=/uploads/${x.logo}>` : ''}<h3>${esc(x.team_name)}</h3><p class=muted>${esc(x.area || '')} ${x.group_name ? '• Group ' + esc(x.group_name) : ''}</p><span class=pill>View Club Profile →</span></a>`).join('') || '<p class=muted>No teams announced.</p>';
+      $('fixtureGrid').innerHTML = f.map(x => `<div class=card><b>${esc(x.team1 || 'TBA')} vs ${esc(x.team2 || 'TBA')}</b><p class=muted>${esc(x.match_date || '')} ${esc(x.match_time || '')} • ${esc(x.venue || '')}</p><span class=pill>${esc(x.status)}${x.status === 'Completed' ? ` • ${x.score1}-${x.score2}` : ''}</span>${x.live_url ? ` <a class="pill live" href="${esc(x.live_url)}" target=_blank>LIVE</a>` : ''}</div>`).join('') || '<p class=muted>No fixtures yet.</p>';
+
+      function standingsTable(rows) {
+        if (!rows.length) {
+          return '<p class="muted">No teams in this group yet.</p>';
+        }
+
+        return `
+    <div class="table-wrap">
+      <table class="table">
+        <tr>
+          <th>Team</th>
+          <th>P</th>
+          <th>W</th>
+          <th>D</th>
+          <th>L</th>
+          <th>GF</th>
+          <th>GA</th>
+          <th>GD</th>
+          <th>Pts</th>
+        </tr>
+        ${rows.map(x => `
+          <tr>
+            <td>${esc(x.team_name)}</td>
+            <td>${x.played}</td>
+            <td>${x.won}</td>
+            <td>${x.draw}</td>
+            <td>${x.lost}</td>
+            <td>${x.gf}</td>
+            <td>${x.ga}</td>
+            <td>${x.gd}</td>
+            <td><b>${x.points}</b></td>
+          </tr>
+        `).join('')}
+      </table>
+    </div>
+  `;
+      }
+
+      const groupA = st.filter(x => String(x.group_name || '').toUpperCase() === 'A');
+      const groupB = st.filter(x => String(x.group_name || '').toUpperCase() === 'B');
+
+      $('standings').innerHTML = st.length ? `
+  <div class="grid">
+
+    <div class="card">
+      <h3>Group A</h3>
+      ${standingsTable(groupA)}
+    </div>
+
+    <div class="card">
+      <h3>Group B</h3>
+      ${standingsTable(groupB)}
+    </div>
+
+  </div>
+` : '<p class="muted">No completed matches yet.</p>';
+
+      $('rulebook').innerHTML = r.rulebook ? `<div class=card><h3>${esc(r.rulebook.title || 'GFL Rule Book')}</h3><a class=btn href="${esc(r.rulebook.url)}" target=_blank>VIEW / DOWNLOAD RULE BOOK</a></div>` : '<p class=muted>Rule book will be available soon.</p>';
+      $('galleryGrid').innerHTML = r.gallery.length ? r.gallery.map(x => `<a class=card href="${esc(x.url)}" target=_blank style="text-decoration:none;color:inherit"><img src="${esc(x.url)}" alt="${esc(x.title || 'GFL Gallery')}" style="width:100%;height:220px;object-fit:cover;border-radius:12px"><h3>${esc(x.title || 'GFL Gallery')}</h3></a>`).join('') : '<p class=muted>No gallery photos yet.</p>';
+      $('newsGrid').innerHTML = n.map(x => `<div class="card notice"><h3>${esc(x.title)}</h3><p class=muted>${esc(x.body)}</p>${x.attachment ? `<a href=/uploads/${x.attachment} target=_blank>View attachment</a>` : ''}</div>`).join('') || '<p class=muted>No notices.</p>';
+      if (s.live_enabled === '1' && s.live_url) $('live').innerHTML = `<div class="card"><span class="pill live">🔴 LIVE NOW</span><h2>${esc(s.live_title || 'GFL Live')}</h2><a class=btn href="${esc(s.live_url)}" target=_blank>WATCH LIVE</a></div>`;
+      else $('live').innerHTML = '';
+      $('registration').innerHTML = s.registration_open === '1' ? `<div class=card><h2>Team Registration</h2><p class=muted>Official online registration is open. Approval is required before team login is issued.</p><a class=btn href=/team-registration.html>REGISTER YOUR TEAM</a></div>` : `<div class=card><h2>Team Registration</h2><p class=muted>${esc(s.registration_closed_message)}</p></div>`;
+      $('socialLinks').innerHTML = [
+        ['YouTube', s.youtube],
+        ['Instagram', s.instagram],
+        ['Facebook', s.facebook]
+      ].filter(x => x[1]).map(x => `<a href="${esc(x[1])}" target=_blank>${x[0]}</a>`).join('')
+    }
+    async function searchPlayer() {
+      const q = $('reg').value.trim();
+      if (!q) return;
+      $('playerResult').innerHTML = '<p>Checking...</p>';
+      const r = await get('/api/player/' + encodeURIComponent(q));
+      $('playerResult').innerHTML = r.error ? `<div class=card>Player not found or not yet approved.</div>` : `<div class=card><h2>${esc(r.name)}</h2><p>${esc(r.team_name)} • Jersey ${r.jersey || '-'} • ${esc(r.position || '-')}</p><p><b>VERIFIED</b> • ${esc(q)}</p><p>Matches: ${r.matches || 0} • Goals: ${r.goals || 0} • Assists: ${r.assists || 0} • Passes: ${r.passes || 0} • Tackles: ${r.tackles || 0}</p></div>`
+    }
+    load();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GFL Player Profile</title>
+
+<style>
+:root{
+  --navy:#08264d;
+  --navy2:#0d3568;
+  --blue:#1769aa;
+  --blue-soft:#eaf3fb;
+  --ink:#12243a;
+  --muted:#64748b;
+  --line:#d7e2ee;
+  --line2:#b8c9db;
+  --bg:#f5f8fc;
+  --white:#fff;
+  --pink:#b52b57;
+  --pink-dark:#922044;
+  --green:#147a55;
+  --green-soft:#e9f7f0;
+  --shadow:0 12px 32px rgba(8,38,77,.08);
+  --radius:18px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+}
+
+a{
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:800;
+}
+a:hover{text-decoration:underline}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:0 28px;
+}
+
+/* Navigation */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(255,255,255,.97);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+
+.topbar-inner{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brand-mark{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:var(--navy);
+  color:#fff;
+  font-size:20px;
+  font-weight:900;
+}
+
+.brand-text strong{
+  display:block;
+  color:var(--navy);
+  font-size:16px;
+}
+
+.brand-text small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  margin-top:2px;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  flex-wrap:wrap;
+}
+
+.nav-links a{
+  color:#3c5068;
+  padding:8px 9px;
+  border-radius:9px;
+  font-size:12px;
+}
+
+.nav-links a:hover{
+  background:var(--blue-soft);
+  color:var(--navy);
+  text-decoration:none;
+}
+
+.nav-btn{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  padding:9px 13px!important;
+  border-radius:9px;
+  background:var(--navy);
+  color:#fff!important;
+  border:1px solid var(--navy);
+}
+
+.nav-btn.ghost{
+  background:#fff;
+  color:var(--navy)!important;
+  border-color:var(--line2);
+}
+
+.nav-toggle{
+  display:none;
+  background:var(--navy);
+  color:#fff;
+  border:0;
+  padding:9px 12px;
+  border-radius:9px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.mobile-nav{
+  display:none;
+  border-top:1px solid var(--line);
+  padding:8px 15px;
+  gap:5px;
+  overflow:auto;
+  background:#fff;
+}
+
+.mobile-nav a{
+  white-space:nowrap;
+  padding:8px 10px;
+  border-radius:8px;
+  color:#3c5068;
+  font-size:12px;
+}
+
+.mobile-nav a:hover{
+  background:var(--blue-soft);
+  text-decoration:none;
+}
+
+/* Page */
+main{
+  padding-top:28px;
+  padding-bottom:45px;
+}
+
+.back{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:14px;
+  color:var(--navy);
+  font-size:13px;
+}
+
+.card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+
+.profile-card{
+  overflow:hidden;
+  position:relative;
+}
+
+.profile-card:before{
+  content:"";
+  display:block;
+  height:5px;
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  background:var(--navy);
+}
+
+.profile{
+  display:grid;
+  grid-template-columns:190px 1fr;
+  gap:28px;
+  align-items:center;
+  padding-top:4px;
+}
+
+.photo{
+  width:180px;
+  height:220px;
+  object-fit:cover;
+  border-radius:16px;
+  border:2px solid var(--line2);
+  background:#eef4f9;
+  box-shadow:0 8px 20px rgba(8,38,77,.09);
+}
+
+.blank{
+  display:grid;
+  place-items:center;
+  color:#8a9aae;
+  font-size:28px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 10px;
+  border-radius:99px;
+  background:var(--green-soft);
+  color:var(--green);
+  border:1px solid #bde5d2;
+  font-size:11px;
+  font-weight:900;
+}
+
+.profile h1{
+  color:var(--navy);
+  font-size:34px;
+  line-height:1.1;
+  margin:12px 0 8px;
+}
+
+.profile-main p{
+  margin:7px 0;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.meta{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:10px;
+  margin-top:18px;
+}
+
+.stat{
+  background:#f8fbfd;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:13px;
+}
+
+.stat small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:750;
+  margin-bottom:5px;
+}
+
+.stat b{
+  color:var(--navy);
+  font-size:20px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:16px;
+  padding:11px 15px;
+  border-radius:10px;
+  background:var(--pink);
+  border:1px solid var(--pink-dark);
+  color:#fff!important;
+  text-decoration:none;
+  font-weight:900;
+  box-shadow:0 6px 15px rgba(146,32,68,.15);
+}
+
+.btn:hover{
+  background:var(--pink-dark);
+  text-decoration:none;
+}
+
+.error-card{
+  border-top:5px solid var(--pink);
+}
+
+.error-card h2{
+  color:var(--navy);
+}
+
+/* Responsive */
+@media(max-width:1000px){
+  .nav-links{display:none}
+  .nav-toggle{display:inline-flex}
+  .mobile-nav.open{display:flex}
+}
+
+@media(max-width:800px){
+  .profile{
+    grid-template-columns:145px 1fr;
+    gap:20px;
+  }
+
+  .photo{
+    width:145px;
+    height:180px;
+  }
+
+  .meta{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:600px){
+  .wrap{
+    padding-left:15px;
+    padding-right:15px;
+  }
+
+  .topbar-inner{
+    min-height:62px;
+  }
+
+  .brand-text small{
+    display:none;
+  }
+
+  main{
+    padding-top:18px;
+  }
+
+  .card{
+    padding:17px;
+  }
+
+  .profile{
+    grid-template-columns:1fr;
+  }
+
+  .photo{
+    width:145px;
+    height:180px;
+  }
+
+  .profile h1{
+    font-size:28px;
+  }
+
+  .meta{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .btn{
+    width:100%;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+
+    <a class="brand" href="/">
+      <div class="brand-mark">⚽</div>
+      <div class="brand-text">
+        <strong>GHUSURI FOOTBALL LEAGUE</strong>
+        <small>Official GFL Player Profile</small>
+      </div>
+    </a>
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/#teams">Teams</a>
+      <a href="/#fixtures">Fixtures</a>
+      <a href="/#table">Points</a>
+      <a href="/#players">Players</a>
+      <a href="/#rules">Rule Book</a>
+      <a href="/#gallery">Gallery</a>
+      <a href="/#news">Notices</a>
+      <a class="nav-btn" href="/team.html">Team Login</a>
+    </nav>
+
+    <button class="nav-toggle" id="navToggle">MENU ☰</button>
+  </div>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="/">Home</a>
+    <a href="/#teams">Teams</a>
+    <a href="/#fixtures">Fixtures</a>
+    <a href="/#table">Points</a>
+    <a href="/#players">Players</a>
+    <a href="/#rules">Rule Book</a>
+    <a href="/#gallery">Gallery</a>
+    <a href="/#news">Notices</a>
+    <a href="/team.html">Team Login</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <a class="back" href="/">← Back to GFL Home</a>
+
+  <div id="app" class="card profile-card">
+    Loading player profile...
+  </div>
+
+</main>
+
+<script>
+const id = new URLSearchParams(location.search).get('id');
+const app = document.getElementById('app');
+
+console.log('[PLAYER PROFILE] Page loaded');
+console.log('[PLAYER PROFILE] URL:', location.href);
+console.log('[PLAYER PROFILE] Player ID:', id);
+
+const esc = x => String(x ?? '').replace(/[&<>"']/g, m => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+}[m]));
+
+const profileUrl = '/api/player-profile/' + encodeURIComponent(id || '');
+
+console.log('[PLAYER PROFILE] Fetching:', profileUrl);
+
+fetch(profileUrl)
+    .then(async r => {
+        console.log('[PLAYER PROFILE] Profile response status:', r.status);
+        console.log('[PLAYER PROFILE] Profile response OK:', r.ok);
+        console.log('[PLAYER PROFILE] Profile content-type:', r.headers.get('content-type'));
+
+        const data = await r.json();
+
+        console.log('[PLAYER PROFILE] Profile API response:', data);
+
+        return data;
+    })
+    .then(p => {
+        console.log('[PLAYER PROFILE] Player object received:', p);
+
+        if (p.error) {
+            console.error('[PLAYER PROFILE] API returned error:', p.error);
+            throw Error(p.error);
+        }
+
+        document.title = p.name + ' | GFL';
+
+        console.log('[PLAYER PROFILE] Player ID:', p.id);
+        console.log('[PLAYER PROFILE] Player name:', p.name);
+        console.log('[PLAYER PROFILE] photo_available:', p.photo_available);
+        console.log('[PLAYER PROFILE] photo:', p.photo);
+        console.log('[PLAYER PROFILE] photo_mime:', p.photo_mime);
+
+        const photoUrl = `/api/public/player/${p.id}/photo`;
+
+        console.log('[PLAYER PROFILE] Photo URL:', photoUrl);
+
+        const photoHtml = p.photo_available
+            ? `<img
+                class="photo"
+                src="${photoUrl}"
+                alt="${esc(p.name)}"
+                onload="console.log('[PLAYER PHOTO] Image loaded successfully:', this.src)"
+                onerror="console.error('[PLAYER PHOTO] Image FAILED:', this.src, 'naturalWidth:', this.naturalWidth, 'naturalHeight:', this.naturalHeight); this.style.display='none'; this.nextElementSibling.style.display='grid'"
+            >
+            <div class="photo blank" style="display:none">⚽</div>`
+            : `<div class="photo blank">⚽</div>`;
+
+        console.log('[PLAYER PROFILE] Generated photo HTML:', photoHtml);
+
+        app.innerHTML = `
+            <div class="profile">
+                ${photoHtml}
+
+                <div class="profile-main">
+                    <span class="badge">✓ VERIFIED PLAYER</span>
+
+                    <h1>${esc(p.name)}</h1>
+
+                    <p>
+                        <strong>${esc(p.team_name)}</strong>
+                        • Jersey ${p.jersey || '-'}
+                        • ${esc(p.position || '-')}
+                    </p>
+
+                    <p class="muted">
+                        Age ${p.age || '-'}
+                        • Registration GFL-${p.league_year}-${String(p.id).padStart(4, '0')}
+                    </p>
+
+                    <a class="btn"
+                        href="/api/id-card/${p.id}"
+                        target="_blank">
+                        VIEW / PRINT ID CARD
+                    </a>
+                </div>
+            </div>
+
+            <div class="meta">
+                <div class="stat">
+                    <small>Matches</small>
+                    <b>${p.matches || 0}</b>
+                </div>
+
+                <div class="stat">
+                    <small>Goals</small>
+                    <b>${p.goals || 0}</b>
+                </div>
+
+                <div class="stat">
+                    <small>Assists</small>
+                    <b>${p.assists || 0}</b>
+                </div>
+
+                <div class="stat">
+                    <small>Tackles</small>
+                    <b>${p.tackles || 0}</b>
+                </div>
+
+                <div class="stat">
+                    <small>Minutes</small>
+                    <b>${p.minutes || 0}</b>
+                </div>
+
+                <div class="stat">
+                    <small>Jersey</small>
+                    <b>#${p.jersey || '-'}</b>
+                </div>
+            </div>
+        `;
+    })
+    .catch(e => {
+        console.error('[PLAYER PROFILE] Fatal error:', e);
+
+        app.classList.add('error-card');
+
+        app.innerHTML = `
+            <h2>Player not found</h2>
+            <p class="muted">${esc(e.message)}</p>
+            <a class="btn" href="/">RETURN TO GFL HOME</a>
+        `;
+    });
+
+document.getElementById('navToggle').onclick = () => {
+    document.getElementById('mobileNav').classList.toggle('open');
+};
+
+document.querySelectorAll('#mobileNav a').forEach(a => {
+    a.onclick = () => document.getElementById('mobileNav').classList.remove('open');
+});
+</script>
+
+</body>
+</html>

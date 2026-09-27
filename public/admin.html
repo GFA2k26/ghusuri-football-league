@@ -1,0 +1,1773 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>GFL Management Panel</title>
+    <style>
+        :root {
+            --navy: #08264d;
+            --navy-2: #0d3568;
+            --blue: #1769aa;
+            --blue-soft: #eaf3fb;
+            --ink: #12243a;
+            --muted: #64748b;
+            --line: #d7e2ee;
+            --line-strong: #b8c9db;
+            --bg: #f5f8fc;
+            --white: #fff;
+            --success: #147a55;
+            --success-bg: #eaf8f2;
+            --warning: #9a6700;
+            --warning-bg: #fff7df;
+            --danger: #b4233c;
+            --danger-bg: #fff0f2;
+            --shadow: 0 10px 28px rgba(8, 38, 77, .08);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background: var(--bg);
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        .mini {
+            font-size: 12px
+        }
+
+        .err {
+            color: var(--danger)
+        }
+
+        .ok {
+            color: var(--success)
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, .96);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(12px);
+        }
+
+        .topbar-inner {
+            max-width: 1450px;
+            margin: auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: var(--navy);
+            color: #fff;
+            font-weight: 900;
+            font-size: 20px;
+            box-shadow: 0 6px 16px rgba(8, 38, 77, .2);
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            line-height: 1.15;
+            margin: 0;
+            color: var(--navy)
+        }
+
+        .brand p {
+            margin: 3px 0 0;
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 700
+        }
+
+        .app-shell {
+            max-width: 1450px;
+            margin: auto;
+            display: flex;
+            min-height: calc(100vh - 71px)
+        }
+
+        .sidebar {
+            width: 245px;
+            flex: 0 0 245px;
+            padding: 24px 14px 30px;
+            position: sticky;
+            top: 71px;
+            height: calc(100vh - 71px);
+            overflow: auto;
+            background: #fff;
+            border-right: 1px solid var(--line);
+        }
+
+        .nav-label {
+            padding: 8px 12px 7px;
+            color: #8a9aae;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            font-weight: 900;
+        }
+
+        .nav-btn {
+            width: 100%;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #3c5068;
+            text-align: left;
+            padding: 11px 12px;
+            border-radius: 11px;
+            margin: 2px 0;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: .15s ease;
+        }
+
+        .nav-btn:hover {
+            background: #f2f6fa;
+            color: var(--navy)
+        }
+
+        .nav-btn.active {
+            background: var(--blue-soft);
+            border-color: #cfe2f4;
+            color: var(--navy);
+            box-shadow: inset 3px 0 0 var(--blue);
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 15px
+        }
+
+        .sidebar-footer {
+            margin-top: 24px;
+            padding: 14px 12px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #f8fafc;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .content {
+            flex: 1;
+            min-width: 0;
+            padding: 26px 28px 60px
+        }
+
+        .page-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .page-head h2 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 25px
+        }
+
+        .page-head p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .section-view {
+            display: none
+        }
+
+        .section-view.active {
+            display: block
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 0 0 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .card h2,
+        .card h3,
+        .card h4 {
+            color: var(--navy)
+        }
+
+        .card h2 {
+            margin: 0 0 14px;
+            font-size: 17px
+        }
+
+        .card h3 {
+            margin: 0 0 12px;
+            font-size: 15px
+        }
+
+        .card h4 {
+            margin: 18px 0 10px;
+            font-size: 13px
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .card-header h2,
+        .card-header h3 {
+            margin: 0
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px
+        }
+
+        .subgrid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 11px;
+            margin: 5px 0;
+            color: var(--ink);
+            background: #fff;
+            border: 1px solid var(--line-strong);
+            border-radius: 9px;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 95px;
+            resize: vertical
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #94a3b8
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(23, 105, 170, .11);
+        }
+
+        label.mini {
+            display: block;
+            color: var(--muted);
+            font-weight: 700
+        }
+
+        input[type=file] {
+            padding: 8px;
+            background: #f8fafc
+        }
+
+        input[type=checkbox] {
+            width: auto
+        }
+
+        button {
+            border: 1px solid var(--navy);
+            padding: 9px 13px;
+            border-radius: 9px;
+            background: var(--navy);
+            color: #fff;
+            font-weight: 850;
+            transition: .15s ease;
+            box-shadow: 0 3px 8px rgba(8, 38, 77, .12);
+        }
+
+        button:hover {
+            background: var(--navy-2);
+            transform: translateY(-1px)
+        }
+
+        button.ghost {
+            background: #fff;
+            color: var(--navy);
+            border-color: var(--line-strong);
+            box-shadow: none;
+        }
+
+        button.ghost:hover {
+            background: #f3f7fb
+        }
+
+        button.danger {
+            background: #fff;
+            color: var(--danger);
+            border-color: #e8b7c1;
+            box-shadow: none
+        }
+
+        button.danger:hover {
+            background: var(--danger-bg)
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center
+        }
+
+        .actions a,
+        a {
+            color: var(--blue);
+            font-weight: 800;
+            text-decoration: none
+        }
+
+        .actions a:hover,
+        a:hover {
+            text-decoration: underline
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--line);
+            margin: 22px 0
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 18px
+        }
+
+        .kpi {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .kpi small {
+            display: block;
+            color: var(--muted);
+            font-weight: 800;
+            font-size: 11px
+        }
+
+        .kpi strong {
+            display: block;
+            color: var(--navy);
+            font-size: 24px;
+            margin-top: 5px
+        }
+
+        .team-summary {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .team-logo {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            background: #fff;
+            border-radius: 11px;
+            padding: 4px;
+            border: 1px solid var(--line);
+        }
+
+        .player-card {
+            background: #fbfdff;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .player-head {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .avatar {
+            width: 64px;
+            height: 78px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #eaf1f8;
+            border: 1px solid var(--line-strong);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 900;
+            background: #edf2f7;
+            color: #526579;
+            margin-top: 4px;
+        }
+
+        .approved {
+            background: var(--success-bg);
+            color: var(--success)
+        }
+
+        .correction {
+            background: var(--warning-bg);
+            color: var(--warning)
+        }
+
+        .rejected {
+            background: var(--danger-bg);
+            color: var(--danger)
+        }
+
+        .stats-editor {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 10px
+        }
+
+        .stat-field label {
+            display: block;
+            font-size: 10px;
+            color: var(--muted);
+            font-weight: 800
+        }
+
+        .stat-field input {
+            margin-top: 4px
+        }
+
+        details.card {
+            padding: 0;
+            overflow: hidden
+        }
+
+        details.card>summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 17px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--navy);
+            font-weight: 850;
+        }
+
+        details.card>summary::-webkit-details-marker {
+            display: none
+        }
+
+        details.card>summary:after {
+            content: "+";
+            font-size: 20px;
+            color: var(--blue)
+        }
+
+        details.card[open]>summary:after {
+            content: "−"
+        }
+
+        details.card>summary+* {
+            margin-left: 20px;
+            margin-right: 20px
+        }
+
+        details.card>summary+.row {
+            margin-top: 0
+        }
+
+        details.card>summary+div:last-child {
+            margin-bottom: 20px
+        }
+
+        /* Status grouping + compact action menus */
+        .status-groups{
+            display:grid;
+            gap:16px;
+        }
+
+        .status-group{
+            border:1px solid var(--line);
+            border-radius:14px;
+            background:#fbfdff;
+            overflow:hidden;
+        }
+
+        .status-group>summary{
+            list-style:none;
+            cursor:pointer;
+            padding:14px 16px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            color:var(--navy);
+            font-weight:900;
+        }
+
+        .status-group>summary::-webkit-details-marker{display:none}
+
+        .status-group>summary:after{
+            content:"+";
+            color:var(--blue);
+            font-size:20px;
+        }
+
+        .status-group[open]>summary:after{content:"−"}
+
+        .status-group-body{
+            padding:0 14px 14px;
+            border-top:1px solid var(--line);
+        }
+
+        .status-group.pending>summary{background:#f8fbff}
+        .status-group.approved>summary{background:var(--success-bg)}
+        .status-group.correction>summary{background:var(--warning-bg)}
+        .status-group.rejected>summary{background:var(--danger-bg)}
+
+        .group-title{
+            display:flex;
+            align-items:center;
+            gap:9px;
+            min-width:0;
+        }
+
+        .group-count{
+            min-width:26px;
+            height:24px;
+            padding:0 8px;
+            display:inline-grid;
+            place-items:center;
+            border-radius:99px;
+            background:#fff;
+            border:1px solid var(--line-strong);
+            color:var(--navy);
+            font-size:11px;
+        }
+
+        .group-note{
+            color:var(--muted);
+            font-size:11px;
+            font-weight:700;
+        }
+
+        .compact-card{
+            margin:12px 0 0;
+        }
+
+        .action-menu{
+            position:relative;
+            display:inline-block;
+        }
+
+        .action-menu select{
+            width:auto;
+            min-width:145px;
+            margin:0;
+            padding:9px 34px 9px 11px;
+            background:#fff;
+            color:var(--navy);
+            border:1px solid var(--line-strong);
+            border-radius:9px;
+            font-weight:850;
+            cursor:pointer;
+        }
+
+        .action-menu select:focus{
+            border-color:var(--blue);
+            box-shadow:0 0 0 3px rgba(23,105,170,.11);
+        }
+
+        .player-section{
+            margin-top:18px;
+        }
+
+        .player-group{
+            margin-top:10px;
+        }
+
+        .player-group>summary{
+            padding:12px 14px;
+        }
+
+        .player-group .player-card{
+            margin:10px 0 0;
+        }
+
+        .action-row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-top:12px;
+        }
+
+        .empty {
+            padding: 28px;
+            text-align: center;
+            color: var(--muted);
+            border: 1px dashed var(--line-strong);
+            border-radius: 12px;
+            background: #fbfdff;
+        }
+
+        #login {
+            max-width: 460px;
+            margin: 10vh auto;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 20px 50px rgba(8, 38, 77, .12);
+        }
+
+        #login h2 {
+            color: var(--navy);
+            margin-top: 0
+        }
+
+        .login-brand {
+            text-align: center;
+            margin-bottom: 22px
+        }
+
+        .login-brand .brand-mark {
+            margin: auto
+        }
+
+        #loginMsg {
+            color: var(--danger);
+            font-weight: 700
+        }
+
+        .mobile-nav {
+            display: none;
+            overflow: auto;
+            padding: 8px 12px;
+            border-top: 1px solid var(--line);
+            gap: 6px;
+            background: #fff;
+        }
+
+        .mobile-nav .nav-btn {
+            width: auto;
+            white-space: nowrap;
+            margin: 0
+        }
+
+        .admin-create-grid {
+            margin-bottom: 16px;
+            align-items: start;
+        }
+
+        .create-card {
+            overflow: hidden;
+        }
+
+        .create-card > summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--navy);
+        }
+
+        .create-card > summary::-webkit-details-marker { display: none; }
+        .create-card > summary:after { content: "+"; color: var(--blue); font-size: 20px; font-weight: 900; }
+        .create-card[open] > summary:after { content: "−"; }
+        .create-card > summary span { display: grid; gap: 3px; }
+        .create-card > summary strong { font-size: 15px; }
+        .create-card > summary small { color: var(--muted); font-size: 11px; font-weight: 600; }
+        .create-card > summary + .subgrid,
+        .create-card > summary + div { margin: 0 20px; }
+        .create-card .action-row { margin: 14px 20px 20px; }
+
+        @media(max-width:1050px) {
+            .sidebar {
+                width: 210px;
+                flex-basis: 210px
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(max-width:780px) {
+            .topbar-inner {
+                padding: 12px 16px
+            }
+
+            .app-shell {
+                display: block
+            }
+
+            .sidebar {
+                display: none
+            }
+
+            .mobile-nav {
+                display: flex
+            }
+
+            .content {
+                padding: 20px 14px 45px
+            }
+
+            .row,
+            .subgrid {
+                grid-template-columns: 1fr
+            }
+
+            .stats-editor {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .page-head {
+                margin-bottom: 16px
+            }
+
+            .page-head h2 {
+                font-size: 21px
+            }
+        }
+
+        @media(max-width:480px) {
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .kpi strong {
+                font-size: 20px
+            }
+
+            .card {
+                padding: 15px
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                scroll-behavior: auto !important;
+                transition: none !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Login -->
+    <section id="login">
+        <div class="login-brand">
+            <div class="brand-mark">⚽</div>
+            <h1 style="color:var(--navy);margin:10px 0 4px">GFL Management</h1>
+            <p class="muted" style="margin:0">Ghusuri Football League · Admin Portal</p>
+        </div>
+        <h2>Admin Login</h2>
+        <input id="adminId" aria-label="Admin ID">
+        <input id="adminPw" type="password" placeholder="Admin password" aria-label="Admin password">
+        <label class="mini"><input id="showAdminPw" type="checkbox"> Show password</label>
+        <button id="loginBtn" style="width:100%;margin:14px 0 4px">LOGIN TO PANEL</button>
+        <p id="loginMsg"></p>
+    </section>
+
+    <!-- Application -->
+    <section id="panel" class="hidden">
+        <header class="topbar">
+            <div class="topbar-inner">
+                <div class="brand">
+                    <div class="brand-mark">⚽</div>
+                    <div>
+                        <h1>GFL Management Panel</h1>
+                        <p>Ghusuri Football League · Administration</p>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="ghost">LOGOUT</button>
+            </div>
+            <nav class="mobile-nav" aria-label="Mobile navigation">
+                <button class="nav-btn active" data-section="dashboard">⌂ Dashboard</button>
+                <button class="nav-btn" data-section="registrations">▣ Registrations</button>
+                <button class="nav-btn" data-section="teams">♟ Teams & Players</button>
+                <button class="nav-btn" data-section="fixtures">◆ Fixtures</button>
+                <button class="nav-btn" data-section="content">▤ Content</button>
+                <button class="nav-btn" data-section="settings">⚙ Settings</button>
+            </nav>
+        </header>
+
+        <div class="app-shell">
+            <aside class="sidebar">
+                <div class="nav-label">Overview</div>
+                <button class="nav-btn active" data-section="dashboard"><span
+                        class="nav-icon">⌂</span>Dashboard</button>
+
+                <div class="nav-label">Competition</div>
+                <button class="nav-btn" data-section="registrations"><span class="nav-icon">▣</span>Team
+                    Registrations</button>
+                <button class="nav-btn" data-section="teams"><span class="nav-icon">♟</span>Teams & Players</button>
+                <button class="nav-btn" data-section="fixtures"><span class="nav-icon">◆</span>Fixtures &
+                    Results</button>
+
+                <div class="nav-label">Website Content</div>
+                <button class="nav-btn" data-section="content"><span class="nav-icon">▤</span>Rule Book &
+                    Gallery</button>
+
+                <div class="nav-label">Configuration</div>
+                <button class="nav-btn" data-section="settings"><span class="nav-icon">⚙</span>League Settings</button>
+
+                <div class="sidebar-footer">
+                    <strong style="color:var(--navy)">Admin workspace</strong><br>
+                    Use the navigation to keep each management task focused and uncluttered.
+                </div>
+            </aside>
+
+            <main class="content">
+
+                <!-- Dashboard -->
+                <section class="section-view active" data-view="dashboard">
+                    <div class="page-head">
+                        <div>
+                            <h2>Dashboard</h2>
+                            <p>Quick access to the main GFL administration areas.</p>
+                        </div>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi"><small>TEAM REGISTRATIONS</small><strong id="dashApps">—</strong></div>
+                        <div class="kpi"><small>ACTIVE TEAMS</small><strong id="dashTeams">—</strong></div>
+                        <div class="kpi"><small>REGISTERED PLAYERS</small><strong id="dashPlayers">—</strong></div>
+                        <div class="kpi"><small>FIXTURES</small><strong id="dashFixtures">—</strong></div>
+                    </div>
+                    <div class="grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Competition</h2>
+                            </div>
+                            <p class="muted">Manage registrations, team profiles, player approvals and match results
+                                from dedicated sections.</p>
+                            <div class="actions">
+                                <button data-go="registrations">Review registrations</button>
+                                <button class="ghost" data-go="teams">Manage teams</button>
+                                <button class="ghost" data-go="fixtures">Manage fixtures</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Website Content</h2>
+                            </div>
+                            <p class="muted">Keep public-facing league resources organized separately from competition
+                                operations.</p>
+                            <div class="actions">
+                                <button data-go="content">Open content manager</button>
+                                <button class="ghost" data-go="settings">Open settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Registrations -->
+                <section class="section-view" data-view="registrations">
+                    <div class="page-head">
+                        <div>
+                            <h2>Team Registrations</h2>
+                            <p>Review applications, inspect submitted files and approve or request corrections.</p>
+                        </div>
+                        <button class="ghost" onclick="loadApplications()">REFRESH</button>
+                    </div>
+                    <section class="card">
+                        <div id="apps"></div>
+                    </section>
+                </section>
+
+                <!-- Teams -->
+                <section class="section-view" data-view="teams">
+                    <div class="page-head">
+                        <div>
+                            <h2>Teams & Player Profiles</h2>
+                            <p>Each team contains its own roster, player documents, approvals and statistics.</p>
+                        </div>
+                        <button class="ghost" onclick="loadTeams()">REFRESH</button>
+                    </div>
+                    <div class="grid admin-create-grid">
+                        <details class="card create-card" open>
+                            <summary>
+                                <span><strong>➕ Add New Team</strong><small>Create a team account directly from the admin panel.</small></span>
+                            </summary>
+                            <div class="subgrid">
+                                <input id="ntc" placeholder="Team Login ID / Gmail *">
+                                <input id="ntr" placeholder="Registration No">
+                                <input id="ntn" placeholder="Team name *">
+                                <input id="ntp" type="password" placeholder="Password *">
+                                <input id="nts" placeholder="Short name">
+                                <input id="nta" placeholder="Area">
+                                <input id="ntg" placeholder="Group A/B">
+                                <input id="ntm" placeholder="Manager">
+                                <input id="ntcon" placeholder="Contact">
+                                <input id="nte" type="email" placeholder="Email">
+                                <input id="ntd" placeholder="Description">
+                                <label class="mini">Team logo<input id="ntl" type="file" accept="image/jpeg,image/jpg"></label>
+                            </div>
+                            <div class="action-row">
+                                <span class="mini muted">Only Team Login ID, team name and password are essential.</span>
+                                <button id="addTeamFromTeamsBtn" type="button">CREATE TEAM</button>
+                            </div>
+                        </details>
+
+                        <details class="card create-card">
+                            <summary>
+                                <span><strong>👤 Add Team Member</strong><small>Create a player registration under any active team.</small></span>
+                            </summary>
+                            <div class="subgrid">
+                                <select id="npt" aria-label="Select team"><option value="">Select active team *</option></select>
+                                <input id="npn" placeholder="Full Name *">
+                                <input id="npd" type="date" aria-label="Date of birth">
+                                <input id="npm" placeholder="Mobile">
+                                <input id="npj" type="number" min="0" placeholder="Jersey">
+                                <input id="npdocno" placeholder="Document Number">
+                                <select id="npp" aria-label="Player position">
+                                    <option value="">Select position *</option>
+                                    <option value="Goalkeeper">Goalkeeper</option>
+                                    <option value="Defender">Defender</option>
+                                    <option value="Full Back">Full Back</option>
+                                    <option value="Centre Back">Centre Back</option>
+                                    <option value="Midfielder">Midfielder</option>
+                                    <option value="Winger">Winger</option>
+                                    <option value="Attacking Midfielder">Attacking Midfielder</option>
+                                    <option value="Defensive Midfielder">Defensive Midfielder</option>
+                                    <option value="Forward">Forward</option>
+                                    <option value="Striker">Striker</option>
+                                </select>
+                                <label class="mini">Player photo<input id="npphoto" type="file" accept=".jpg,.jpeg,image/jpeg"></label>
+                                <label class="mini">Player document<input id="npdoc" type="file" accept=".jpg,.jpeg,.pdf,image/jpeg,application/pdf"></label>
+                            </div>
+                            <div class="action-row">
+                                <span class="mini muted">New members start as Pending unless you approve them.</span>
+                                <button id="addPlayerFromTeamsBtn" type="button">CREATE PLAYER</button>
+                            </div>
+                        </details>
+                    </div>
+
+                    <section class="card">
+                        <div id="teams"></div>
+                    </section>
+                </section>
+
+                <!-- Fixtures -->
+                <section class="section-view" data-view="fixtures">
+                    <div class="page-head">
+                        <div>
+                            <h2>Fixtures & Results</h2>
+                            <p>Create matches, update scores and maintain the competition schedule.</p>
+                        </div>
+                    </div>
+                    <section class="card">
+                        <div class="card-header">
+                            <h2>Add Fixture</h2>
+                        </div>
+                        <div class="row">
+                            <select id="fxTeam1"></select>
+                            <select id="fxTeam2"></select>
+                            <input id="fxGroup" placeholder="Group">
+                        </div>
+                        <div class="row">
+                            <input id="fxNo" placeholder="Match No">
+                            <input id="fxDate" type="date">
+                            <input id="fxTime" type="time">
+                        </div>
+                        <div class="row">
+                            <input id="fxVenue" placeholder="Venue">
+                            <select id="fxStatus">
+                                <option>Upcoming</option>
+                                <option>Completed</option>
+                                <option>Postponed</option>
+                                <option>Cancelled</option>
+                            </select>
+                            <input id="fxLive" placeholder="Live URL optional">
+                        </div>
+                        <div class="row">
+                            <input id="fxScore1" type="number" placeholder="Score 1">
+                            <input id="fxScore2" type="number" placeholder="Score 2">
+                            <button id="addFixtureBtn">ADD FIXTURE</button>
+                        </div>
+                    </section>
+                    <section class="card">
+                        <div class="card-header">
+                            <h2>Scheduled Fixtures</h2>
+                        </div>
+                        <div id="fixtures"></div>
+                    </section>
+                </section>
+
+                <!-- Content -->
+                <section class="section-view" data-view="content">
+                    <div class="page-head">
+                        <div>
+                            <h2>Rule Book & Gallery</h2>
+                            <p>Manage resources and media displayed on the public GFL website.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <section class="card">
+                            <div class="card-header">
+                                <h2>GFL Rule Book</h2>
+                            </div>
+                            <input id="rulebookTitle" placeholder="Rule book title" value="GFL Rule Book">
+                            <input id="rulebookFile" type="file" accept=".pdf,.jpg,.jpeg,application/pdf,image/jpeg">
+                            <button id="uploadRulebookBtn">UPLOAD / REPLACE RULE BOOK</button>
+                            <div id="rulebookAdmin" style="margin-top:14px"></div>
+                        </section>
+
+                        <section class="card">
+                            <div class="card-header">
+                                <h2>Photo Gallery</h2>
+                            </div>
+                            <input id="galleryTitle" placeholder="Photo title optional">
+                            <input id="galleryFile" type="file" accept=".jpg,.jpeg,image/jpeg">
+                            <button id="uploadGalleryBtn">UPLOAD PHOTO</button>
+                            <div id="galleryAdmin" style="margin-top:14px"></div>
+                        </section>
+                    </div>
+                </section>
+
+                <!-- Settings -->
+                <section class="section-view" data-view="settings">
+                    <div class="page-head">
+                        <div>
+                            <h2>League Settings</h2>
+                            <p>Configure registration, branding, social links, live coverage and manual team creation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <section class="card">
+                            <div class="card-header">
+                                <h2>Registration Control</h2>
+                            </div>
+                            <select id="ro">
+                                <option value="1">OPEN</option>
+                                <option value="0">CLOSED</option>
+                            </select>
+                            <input id="rs" placeholder="Opening date/time optional">
+                            <input id="re" placeholder="Closing date/time optional">
+                            <input id="rc" value="Team registration is currently closed.">
+                            <button id="saveReg">SAVE REGISTRATION SETTINGS</button>
+                        </section>
+
+                        <section class="card">
+                            <div class="card-header">
+                                <h2>League Branding</h2>
+                            </div>
+                            <input id="ln" placeholder="League name">
+                            <input id="ly" value="2026" placeholder="League year">
+                            <input id="leagueLogo" type="file" accept="image/jpeg,image/jpg">
+                            <button id="saveLeague">SAVE LEAGUE BRANDING</button>
+                        </section>
+
+                        <section class="card">
+                            <div class="card-header">
+                                <h2>Social + Live</h2>
+                            </div>
+                            <input id="yt" placeholder="YouTube URL">
+                            <input id="ig" placeholder="Instagram URL">
+                            <input id="fb" placeholder="Facebook URL">
+                            <input id="liveTitle" placeholder="Live title">
+                            <input id="liveUrl" placeholder="Live URL">
+                            <select id="liveEnabled">
+                                <option value="0">Live OFF</option>
+                                <option value="1">Live ON</option>
+                            </select>
+                            <button id="saveSocial">SAVE SOCIAL + LIVE</button>
+                        </section>
+
+                        <section class="card">
+                            <div class="card-header">
+                                <h2>Add Team Manually</h2>
+                            </div>
+                            <input id="tc" placeholder="Team Login ID / Gmail">
+                            <input id="tr" placeholder="Registration No">
+                            <input id="tn" placeholder="Team name">
+                            <input id="tp" type="password" placeholder="Password">
+                            <input id="ts" placeholder="Short name">
+                            <input id="ta" placeholder="Area">
+                            <input id="tg" placeholder="Group A/B">
+                            <input id="tm" placeholder="Manager">
+                            <input id="tcon" placeholder="Contact">
+                            <input id="te" placeholder="Email">
+                            <input id="td" placeholder="Description">
+                            <input id="tl" type="file" accept="image/jpeg,image/jpg">
+                            <button id="addTeamBtn">ADD TEAM</button>
+                        </section>
+
+                        <section class="card">
+                            <div class="card-header">
+                                <h2>Season + Notice</h2>
+                            </div>
+                            <input id="sn" placeholder="GFL 2026">
+                            <button id="addSeasonBtn">ADD SEASON</button>
+                            <hr>
+                            <input id="nt" placeholder="Notice title">
+                            <textarea id="nb" placeholder="Notice body"></textarea>
+                            <input id="na" type="file" accept="image/jpeg,image/jpg,application/pdf">
+                            <button id="addNoticeBtn">PUBLISH NOTICE</button>
+                        </section>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </section>
+
+
+    <script>
+        (function () {
+            const views = [...document.querySelectorAll('.section-view')];
+            const navs = [...document.querySelectorAll('.nav-btn')];
+
+            function openSection(name) {
+                views.forEach(v => v.classList.toggle('active', v.dataset.view === name));
+                navs.forEach(n => n.classList.toggle('active', n.dataset.section === name));
+                const titles = {
+                    dashboard: 'Dashboard',
+                    registrations: 'Team Registrations',
+                    teams: 'Teams & Player Profiles',
+                    fixtures: 'Fixtures & Results',
+                    content: 'Rule Book & Gallery',
+                    settings: 'League Settings'
+                };
+                document.title = 'GFL Management · ' + (titles[name] || 'Admin');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            navs.forEach(n => n.addEventListener('click', () => openSection(n.dataset.section)));
+            document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => openSection(b.dataset.go)));
+
+            window.gflOpenSection = openSection;
+
+            // Populate dashboard counts from the same API data already used by the page.
+            async function updateDashboard() {
+                try {
+                    const [apps, teams, fixtures] = await Promise.all([
+                        api('/api/team-applications'),
+                        api('/api/admin/teams'),
+                        api('/api/admin/fixtures')
+                    ]);
+                    $('dashApps').textContent = apps.length;
+                    $('dashTeams').textContent = teams.filter(t => t.active).length;
+                    $('dashPlayers').textContent = teams.reduce((n, t) => n + (t.players?.length || 0), 0);
+                    $('dashFixtures').textContent = fixtures.length;
+                } catch (e) {
+                    console.warn('Dashboard summary unavailable:', e.message);
+                }
+            }
+
+            // Keep the existing loadAll behavior, then refresh dashboard metrics.
+            const oldLoadAll = window.loadAll;
+            if (oldLoadAll) {
+                window.loadAll = async function () {
+                    await oldLoadAll();
+                    await updateDashboard();
+                };
+            }
+        })();
+    </script>
+
+    <script>
+        const $ = id => document.getElementById(id); const esc = x => String(x ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); async function api(u, o = {}) { const opts = { ...o, cache: 'no-store', headers: { ...(o.headers || {}) } }; const r = await fetch(u, opts); let j = {}; try { j = await r.json() } catch { } if (!r.ok) throw Error(j.error || `Request failed (${r.status})`); return j } function msg(t) { alert(t) }
+        $('showAdminPw').onchange = () => { $('adminPw').type = $('showAdminPw').checked ? 'text' : 'password' }; $('loginBtn').onclick = async () => { try { const u = await api('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: $('adminId').value, password: $('adminPw').value }) }); if (u.role !== 'admin') throw Error('Admin login required'); $('login').classList.add('hidden'); $('panel').classList.remove('hidden'); await loadAll() } catch (e) { $('loginMsg').textContent = e.message } }; $('logoutBtn').onclick = async () => { await api('/api/logout', { method: 'POST' }); location.reload() }; async function loadAll() { await loadSettings(); await loadApplications(); await loadTeams(); await loadFixtures(); await loadResources() }
+        async function loadResources() {
+            const r = await api('/api/admin/resources');
+
+            $('rulebookAdmin').innerHTML = r.rulebook
+                ? `<p class="mini">
+                    <a href="${esc(r.rulebook.url)}" target="_blank">
+                    VIEW CURRENT RULE BOOK
+                    </a>
+                    • ${esc(r.rulebook.title)}
+                </p>
+                <button class="danger" onclick="removeRulebook(${r.rulebook.id})">
+                    REMOVE RULE BOOK
+                </button>`
+                : '<p class="muted">No rule book uploaded.</p>';
+
+            $('galleryAdmin').innerHTML = r.gallery.length
+                ? r.gallery.map(x => `
+                    <div class="card">
+                    <a href="${esc(x.url)}" target="_blank">
+                        ${esc(x.title)}
+                    </a>
+                    <br>
+                    <img
+                        src="${esc(x.url)}"
+                        style="max-width:180px;max-height:120px;object-fit:cover;border-radius:10px;margin-top:6px"
+                    >
+                    <br>
+                    <button class="danger" onclick="removeGallery(${x.id})">
+                        REMOVE
+                    </button>
+                    </div>
+                `).join('')
+                : '<p class="muted">No gallery photos uploaded.</p>';
+            }
+        async function removeRulebook(id) { if (!confirm('Remove the current rule book?')) return; await api('/api/admin/rulebook-remove', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) }); loadResources(); msg('Rule book removed') }
+        async function removeGallery(id) { if (!confirm('Remove this gallery photo?')) return; await api('/api/admin/gallery-remove', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) }); loadResources(); msg('Gallery photo removed') }
+        async function loadSettings() { const s = await api('/api/settings'); $('ro').value = s.registration_open || '1'; $('rs').value = s.registration_start || ''; $('re').value = s.registration_end || ''; $('rc').value = s.registration_closed_message || ''; $('ln').value = s.league_name || ''; $('ly').value = s.league_year || ''; $('yt').value = s.youtube || ''; $('ig').value = s.instagram || ''; $('fb').value = s.facebook || ''; $('liveTitle').value = s.live_title || ''; $('liveUrl').value = s.live_url || ''; $('liveEnabled').value = s.live_enabled || '0' }
+        $('addTeamFromTeamsBtn').onclick = createAdminTeam;
+        $('addPlayerFromTeamsBtn').onclick = createAdminPlayer;
+        $('saveReg').onclick = async () => { await api('/api/admin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ registration_open: $('ro').value, registration_start: $('rs').value, registration_end: $('re').value, registration_closed_message: $('rc').value }) }); msg('Registration settings saved') }; $('saveLeague').onclick = async () => { const f = new FormData(); f.append('league_name', $('ln').value); f.append('league_year', $('ly').value); if ($('leagueLogo').files[0]) f.append('league_logo_file', $('leagueLogo').files[0]); await api('/api/admin/settings', { method: 'POST', body: f }); msg('League settings saved') }; $('saveSocial').onclick = async () => { await api('/api/admin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ youtube: $('yt').value, instagram: $('ig').value, facebook: $('fb').value }) }); await api('/api/admin/live', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enabled: $('liveEnabled').value === '1', url: $('liveUrl').value, title: $('liveTitle').value }) }); msg('Saved') }; $('addTeamBtn').onclick = async () => { const f = new FormData();[['code', 'tc'], ['regNo', 'tr'], ['name', 'tn'], ['password', 'tp'], ['shortName', 'ts'], ['area', 'ta'], ['groupName', 'tg'], ['manager', 'tm'], ['contact', 'tcon'], ['email', 'te'], ['description', 'td']].forEach(([a, b]) => f.append(a, $(b).value)); if ($('tl').files[0]) f.append('logo', $('tl').files[0]); await api('/api/admin/team', { method: 'POST', body: f }); msg('Team added'); loadTeams() }; $('addSeasonBtn').onclick = async () => { await api('/api/admin/season', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: $('sn').value }) }); msg('Season added') }; $('addNoticeBtn').onclick = async () => { const f = new FormData(); f.append('title', $('nt').value); f.append('body', $('nb').value); if ($('na').files[0]) f.append('attachment', $('na').files[0]); await api('/api/admin/announcement', { method: 'POST', body: f }); msg('Notice published') }; $('uploadRulebookBtn').onclick = async () => { try { const file = $('rulebookFile').files[0]; if (!file) return msg('Select the rule book file first.'); if (file.size > 1024 * 1024) return msg('Rule book must be 1 MB or smaller.'); const ok = ['application/pdf', 'image/jpeg', 'image/jpg'].includes(file.type) || /\.(pdf|jpe?g)$/i.test(file.name); if (!ok) return msg('Only PDF/JPG/JPEG rule book files are allowed.'); const f = new FormData(); f.append('title', $('rulebookTitle').value.trim() || 'GFL Rule Book'); f.append('rulebook', file); $('uploadRulebookBtn').disabled = true; await api('/api/admin/rulebook', { method: 'POST', body: f }); $('rulebookFile').value = ''; await loadResources(); msg('Rule book uploaded successfully.') } catch (e) { msg('Rule book upload failed: ' + e.message) } finally { $('uploadRulebookBtn').disabled = false } };
+        $('uploadGalleryBtn').onclick = async () => { try { const file = $('galleryFile').files[0]; if (!file) return msg('Select a JPG/JPEG photo first.'); if (file.size > 1024 * 1024) return msg('Gallery photo must be 1 MB or smaller.'); const ok = ['image/jpeg', 'image/jpg'].includes(file.type) || /\.(jpe?g)$/i.test(file.name); if (!ok) return msg('Only JPG/JPEG gallery photos are allowed.'); const f = new FormData(); f.append('title', $('galleryTitle').value.trim() || 'GFL Gallery'); f.append('gallery', file); $('uploadGalleryBtn').disabled = true; await api('/api/admin/gallery', { method: 'POST', body: f }); $('galleryFile').value = ''; $('galleryTitle').value = ''; await loadResources(); msg('Gallery photo uploaded successfully.') } catch (e) { msg('Gallery upload failed: ' + e.message) } finally { $('uploadGalleryBtn').disabled = false } };
+        async function loadApplications() {
+            const a = await api('/api/team-applications');
+
+            const groups = [
+                { key: 'Pending', label: 'Pending Review', cls: 'pending', note: 'Applications waiting for an admin decision.' },
+                { key: 'Correction Required', label: 'Correction Required', cls: 'correction', note: 'Applications returned to the team for corrections.' },
+                { key: 'Approved', label: 'Approved', cls: 'approved', note: 'Approved registrations. No review action is shown.' },
+                { key: 'Rejected', label: 'Rejected', cls: 'rejected', note: 'Rejected registrations. Reject is intentionally unavailable here.' }
+            ];
+
+            $('apps').innerHTML = groups.map(g => {
+                const items = a.filter(x => x.status === g.key);
+                if (!items.length) return '';
+
+                return `
+                    <details class="status-group ${g.cls}" ${g.key === 'Pending' ? 'open' : ''}>
+                        <summary>
+                            <span class="group-title">
+                                <span>${g.label}</span>
+                                <span class="group-count">${items.length}</span>
+                            </span>
+                            <span class="group-note">${g.note}</span>
+                        </summary>
+
+                        <div class="status-group-body">
+                            ${items.map(x => `
+                                <article class="card compact-card">
+                                    <div class="card-header">
+                                        <div>
+                                            <b>${esc(x.team_name)}</b>
+                                            <div class="mini muted">
+                                                ${esc(x.reg_no)} • ${esc(x.email || '')} • ${esc(x.contact || '')}
+                                            </div>
+                                        </div>
+                                        <span class="status ${g.cls === 'approved' ? 'approved' : g.cls === 'correction' ? 'correction' : g.cls === 'rejected' ? 'rejected' : ''}">
+                                            ${esc(x.status)}
+                                        </span>
+                                    </div>
+
+                                    <div class="actions">
+                                        ${x.logo ? `<a href="/api/private/application/${x.id}/logo" target="_blank">VIEW TEAM LOGO</a>` : ''}
+                                        ${x.document ? `<a href="/api/private/application/${x.id}/document" target="_blank">VIEW TEAM DOCUMENT</a>` : ''}
+                                    </div>
+
+                                    <div class="action-row">
+                                        ${g.key === 'Pending' ? `
+                                            <span class="mini muted">Choose a review action:</span>
+                                            <div class="action-menu">
+                                                <select aria-label="Application actions" onchange="applicationAction(this,${x.id})">
+                                                    <option value="">ACTIONS</option>
+                                                    <option value="Approved">Approve</option>
+                                                    <option value="Correction Required">Request Correction</option>
+                                                    <option value="Rejected">Reject</option>
+                                                    <option value="remove">Remove Registration</option>
+                                                </select>
+                                            </div>
+                                        ` : `
+                                            <span class="mini muted">${g.key === 'Rejected' ? 'This registration is rejected.' : 'Registration status: ' + esc(g.label)}</span>
+                                            <div class="action-menu">
+                                                <select aria-label="Application actions" onchange="applicationAction(this,${x.id})">
+                                                    <option value="">ACTIONS</option>
+                                                    <option value="remove">Remove Registration</option>
+                                                </select>
+                                            </div>
+                                        `}
+                                    </div>
+                                </article>
+                            `).join('')}
+                        </div>
+                    </details>
+                `;
+            }).join('') || '<p class="muted">No applications.</p>';
+        }
+
+        async function applicationAction(select, id) {
+            const action = select.value;
+            select.value = '';
+            if (!action) return;
+
+            if (action === 'remove') {
+                await removeApplication(id);
+                return;
+            }
+
+            await applicationStatus(id, action);
+        }
+
+        async function applicationStatus(id, status) { let reason = ''; if (status === 'Correction Required') { reason = prompt('Correction reason:') || ''; if (!reason) return } const j = await api('/api/admin/team-application-status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, status, reason }) }); if (j.loginId) msg('Approved. Team Login ID: ' + j.loginId + '\nThe team will use the password created during registration.'); loadApplications(); loadTeams() }
+        async function removeApplication(id) { if (!confirm('Permanently remove this team registration?')) return; await api('/api/admin/team-application-remove', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) }); loadApplications(); msg('Team registration removed') }
+        const statDefs = [['matches', 'Matches Played'], ['starts', 'Starts'], ['goals', 'Goals'], ['assists', 'Assists'], ['passes', 'Passes'], ['key_passes', 'Key Passes'], ['shots', 'Shots'], ['tackles', 'Tackles'], ['interceptions', 'Interceptions'], ['yellow', 'Yellow Cards'], ['red', 'Red Cards'], ['minutes', 'Minutes Played']];
+
+        const posOpts = ['Goalkeeper', 'Defender', 'Full Back', 'Centre Back', 'Midfielder', 'Winger', 'Attacking Midfielder', 'Defensive Midfielder', 'Forward', 'Striker'];
+
+        function playerActionMenu(x) {
+            const status = x.status || 'Pending';
+
+            let options = `<option value="">ACTIONS</option>
+                <option value="edit">Edit Player Details</option>`;
+
+            if (x.photo_available) options += `<option value="photo">View Photo</option>`;
+            if (x.document_available) options += `<option value="document">View Document</option>`;
+            if (status === 'Approved') options += `<option value="idcard">View / Print ID Card</option>`;
+            if (status !== 'Approved' && status !== 'Rejected') options += `<option value="approve">Approve</option>`;
+            if (status !== 'Rejected') options += `<option value="correction">Correction Required</option>`;
+            if (status !== 'Rejected') options += `<option value="reject">Reject</option>`;
+            options += `<option value="stats">Edit Statistics</option><option value="remove">Remove Player Registration</option>`;
+
+            return `<div class="action-menu">
+                <select aria-label="Player actions" onchange="playerAction(this,${x.id})">
+                    ${options}
+                </select>
+            </div>`;
+        }
+
+        function playerCard(x) {
+            const statusClass =
+                x.status === 'Approved' ? 'approved' :
+                x.status === 'Correction Required' ? 'correction' :
+                x.status === 'Rejected' ? 'rejected' : '';
+
+            return `<article class="player-card" id="playerCard${x.id}">
+                <div class=player-head>
+                    ${x.photo_available
+                        ? `<img class=avatar src="/api/private/player/${x.id}/photo" alt="${esc(x.name)}">`
+                        : '<div class=avatar>⚽</div>'}
+                    <div>
+                        <b>${esc(x.name)}</b>
+                        <div class=muted>${esc(x.position || '-')} • Jersey ${x.jersey || '-'} • Age ${x.age || '-'}</div>
+                        <span class="status ${statusClass}">${esc(x.status || 'Pending')}</span>
+                    </div>
+                </div>
+
+                <p class=mini>
+                    Registration: GFL-${$('ly').value}-${String(x.id).padStart(4, '0')}
+                    • Document No: ${esc(x.document_no || '-')}
+                </p>
+
+                <div class=actions>
+                    ${x.photo_available ? `<a href="/api/private/player/${x.id}/photo" target="_blank">VIEW PHOTO</a>` : ''}
+                    ${x.document_available ? `<a href="/api/private/player/${x.id}/document" target="_blank">VIEW DOCUMENT</a>` : ''}
+                    ${x.status === 'Approved' ? `<a href="/api/id-card/${x.id}" target="_blank">VIEW / PRINT ID CARD</a>` : ''}
+                </div>
+
+                ${x.correction_reason ? `<p class=err>Correction: ${esc(x.correction_reason)}</p>` : ''}
+
+                <div class=subgrid>
+                    <input id="pn${x.id}" value="${esc(x.name)}" placeholder="Full Name">
+                    <input id="pd${x.id}" type=date value="${x.dob || ''}">
+                    <input id="pm${x.id}" value="${esc(x.mobile || '')}" placeholder="Mobile">
+                    <input id="pj${x.id}" type=number value="${x.jersey ?? ''}" placeholder="Jersey">
+                    <input id="pdocno${x.id}" value="${esc(x.document_no || '')}" placeholder="Document Number">
+                    <select id="pp${x.id}">
+                        ${posOpts.map(o => `<option ${x.position === o ? 'selected' : ''}>${o}</option>`).join('')}
+                    </select>
+                    <label class=mini>Replace photo<input id="pphoto${x.id}" type=file accept=".jpg,.jpeg,image/jpeg"></label>
+                    <label class=mini>Replace document<input id="pdoc${x.id}" type=file accept=".jpg,.jpeg,.pdf,image/jpeg,application/pdf"></label>
+                </div>
+
+                <div class="action-row">
+                    <span class="mini muted">Player management</span>
+                    ${playerActionMenu(x)}
+                </div>
+
+                <h4>Player Statistics</h4>
+                <div class=stats-editor>
+                    ${statDefs.map(([k, label]) => `
+                        <div class=stat-field>
+                            <label>${label}
+                                <input id="st${x.id}${k}" type=number min=0 value="${x[k] || 0}">
+                            </label>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="action-row">
+                    <span class="mini muted">Statistics can be zero when not applicable.</span>
+                    <button onclick="saveStats(${x.id})">SAVE STATISTICS</button>
+                </div>
+            </article>`;
+        }
+
+        async function playerAction(select, id) {
+            const action = select.value;
+            select.value = '';
+            if (!action) return;
+
+            if (action === 'edit') {
+                await editPlayer(id);
+                return;
+            }
+
+            if (action === 'approve') {
+                await playerStatus(id, 'Approved');
+                return;
+            }
+
+            if (action === 'correction') {
+                await requestPlayerCorrection(id);
+                return;
+            }
+
+            if (action === 'reject') {
+                await playerStatus(id, 'Rejected');
+                return;
+            }
+
+            if (action === 'remove') {
+                await removePlayer(id);
+                return;
+            }
+
+            if (action === 'stats') {
+                document.getElementById('st' + id + 'matches')?.focus();
+                return;
+            }
+
+            if (action === 'photo') {
+                window.open('/api/private/player/' + id + '/photo', '_blank');
+                return;
+            }
+
+            if (action === 'document') {
+                window.open('/api/private/player/' + id + '/document', '_blank');
+                return;
+            }
+
+            if (action === 'idcard') {
+                window.open('/api/id-card/' + id, '_blank');
+            }
+        }
+
+        async function loadTeams() {
+            const t = await api('/api/admin/teams');
+
+            $('teams').innerHTML = t.map(x => {
+                const playerGroups = [
+                    { key: 'Pending', label: 'Pending Review', cls: 'pending', note: 'Players waiting for an admin decision.' },
+                    { key: 'Correction Required', label: 'Correction Required', cls: 'correction', note: 'Players sent back for corrections.' },
+                    { key: 'Approved', label: 'Approved Players', cls: 'approved', note: 'Approved roster members.' },
+                    { key: 'Rejected', label: 'Rejected Players', cls: 'rejected', note: 'Rejected players. Reject action is removed.' }
+                ];
+
+                const playersHtml = playerGroups.map(g => {
+                    const players = (x.players || []).filter(p => (p.status || 'Pending') === g.key);
+                    if (!players.length) return '';
+
+                    return `
+                        <details class="status-group player-group ${g.cls}" ${g.key === 'Pending' ? 'open' : ''}>
+                            <summary>
+                                <span class="group-title">
+                                    <span>${g.label}</span>
+                                    <span class="group-count">${players.length}</span>
+                                </span>
+                                <span class="group-note">${g.note}</span>
+                            </summary>
+                            <div class="status-group-body">
+                                ${players.map(playerCard).join('')}
+                            </div>
+                        </details>
+                    `;
+                }).join('');
+
+                const totalPlayers = (x.players || []).length;
+
+                return `<details class=card open>
+                    <summary>
+                        <div class=team-summary>
+                            ${x.logo ? `<img class=team-logo src="/uploads/${x.logo}" alt="">` : ''}
+                            <span>
+                                <b>${esc(x.team_name)}</b><br>
+                                <span class=muted>
+                                    ${esc(x.team_code)} • ${x.active ? 'ACTIVE' : 'REMOVED'} • ${totalPlayers} players
+                                </span>
+                            </span>
+                        </div>
+                    </summary>
+
+                    <div class=row>
+                        <input id="en${x.id}" value="${esc(x.team_name || '')}">
+                        <input id="ec${x.id}" value="${esc(x.team_code || '')}">
+                        <input id="eg${x.id}" value="${esc(x.group_name || '')}">
+                    </div>
+
+                    <div class=row>
+                        <input id="ea${x.id}" value="${esc(x.area || '')}">
+                        <input id="em${x.id}" value="${esc(x.manager || '')}">
+                        <input id="eco${x.id}" value="${esc(x.contact || '')}">
+                    </div>
+
+                    <div class=row>
+                        <input id="ee${x.id}" value="${esc(x.email || '')}">
+                        <input id="es${x.id}" value="${esc(x.short_name || '')}">
+                        <input id="ed${x.id}" value="${esc(x.description || '')}">
+                    </div>
+
+                    <input id="ep${x.id}" type=password placeholder="New password (optional)">
+
+                    <div class="action-row">
+                        <span class="mini muted">Team management</span>
+                        <div class="action-menu">
+                            <select aria-label="Team actions" onchange="teamAction(this,${x.id})">
+                                <option value="">ACTIONS</option>
+                                <option value="save">Save Team</option>
+                                <option value="remove">Remove Team</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="card-header">
+                        <h3>Player Profiles</h3>
+                        <span class="mini muted">${totalPlayers} total</span>
+                    </div>
+
+                    <div class="status-groups">
+                        ${playersHtml || '<p class="muted">No players registered for this team.</p>'}
+                    </div>
+                </details>`;
+            }).join('') || '<p class=muted>No teams.</p>';
+
+            fillTeamSelects(t);
+        }
+
+        async function teamAction(select, id) {
+            const action = select.value;
+            select.value = '';
+            if (action === 'save') await editTeam(id);
+            if (action === 'remove') await removeTeam(id);
+        }
+
+        function fillTeamSelects(t) {
+            const opts = '<option value="">TBA</option>' + t.filter(x => x.active).map(x => `<option value="${x.id}">${esc(x.team_name)}</option>`).join('');
+            $('fxTeam1').innerHTML = opts;
+            $('fxTeam2').innerHTML = opts;
+            const playerOpts = '<option value="">Select active team *</option>' + t.filter(x => x.active).map(x => `<option value="${x.id}">${esc(x.team_name)}</option>`).join('');
+            if ($('npt')) $('npt').innerHTML = playerOpts;
+        }
+        async function createAdminTeam() {
+            try {
+                const code = $('ntc').value.trim();
+                const name = $('ntn').value.trim();
+                const password = $('ntp').value;
+                if (!code || !name || !password) return msg('Team Login ID, team name and password are required.');
+
+                const f = new FormData();
+                [['code','ntc'],['regNo','ntr'],['name','ntn'],['password','ntp'],['shortName','nts'],['area','nta'],['groupName','ntg'],['manager','ntm'],['contact','ntcon'],['email','nte'],['description','ntd']].forEach(([a,b]) => f.append(a, $(b).value));
+                if ($('ntl').files[0]) f.append('logo', $('ntl').files[0]);
+                await api('/api/admin/team', { method: 'POST', body: f });
+                ['ntc','ntr','ntn','ntp','nts','nta','ntg','ntm','ntcon','nte','ntd'].forEach(id => $(id).value = '');
+                $('ntl').value = '';
+                msg('Team created successfully.');
+                await loadTeams();
+            } catch (e) { msg('Team creation failed: ' + e.message); }
+        }
+
+        async function createAdminPlayer() {
+            try {
+                const teamId = $('npt').value;
+                const name = $('npn').value.trim();
+                const dob = $('npd').value;
+                const position = $('npp').value;
+                if (!teamId || !name || !dob || !position) return msg('Team, player name, date of birth and position are required.');
+
+                const fd = new FormData();
+                fd.append('teamId', teamId);
+                fd.append('name', name);
+                fd.append('dob', dob);
+                fd.append('mobile', $('npm').value.trim());
+                fd.append('jersey', $('npj').value);
+                fd.append('documentNo', $('npdocno').value.trim());
+                fd.append('position', position);
+                if ($('npphoto').files[0]) fd.append('photo', $('npphoto').files[0]);
+                if ($('npdoc').files[0]) fd.append('document', $('npdoc').files[0]);
+
+                await api('/api/admin/player', { method: 'POST', body: fd });
+                ['npt','npn','npd','npm','npj','npdocno','npp'].forEach(id => $(id).value = '');
+                $('npphoto').value = '';
+                $('npdoc').value = '';
+                msg('Team member created successfully. It is now pending approval.');
+                await loadTeams();
+            } catch (e) { msg('Player creation failed: ' + e.message); }
+        }
+
+        async function editTeam(id) { const b = { id, name: $('en' + id).value, code: $('ec' + id).value, groupName: $('eg' + id).value, area: $('ea' + id).value, manager: $('em' + id).value, contact: $('eco' + id).value, email: $('ee' + id).value, shortName: $('es' + id).value, description: $('ed' + id).value }; await api('/api/admin/team-update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }); if ($('ep' + id).value) await api('/api/admin/team-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, password: $('ep' + id).value }) }); msg('Team updated'); loadTeams() }; async function removeTeam(id) { if (!confirm('Remove this team?')) return; await api('/api/admin/team-remove', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) }); loadTeams() }
+        async function editPlayer(id) { const fd = new FormData(); fd.append('id', id); fd.append('name', $('pn' + id).value.trim()); fd.append('dob', $('pd' + id).value); fd.append('mobile', $('pm' + id).value.trim()); fd.append('jersey', $('pj' + id).value); fd.append('position', $('pp' + id).value); fd.append('documentNo', $('pdocno' + id).value.trim()); if ($('pphoto' + id).files[0]) fd.append('photo', $('pphoto' + id).files[0]); if ($('pdoc' + id).files[0]) fd.append('document', $('pdoc' + id).files[0]); await api('/api/admin/player-update', { method: 'POST', body: fd }); msg('Player details updated'); loadTeams() }; async function requestPlayerCorrection(id) { const reason = prompt('Enter the correction reason for the team:') || ''; if (!reason) return; await playerStatus(id, 'Correction Required', reason) } async function playerStatus(id, status, reason = '') { await api('/api/admin/player-status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, status, reason }) }); loadTeams() } 
+       async function saveStats(id) {
+            try {
+                const b = { playerId: id };
+
+                statDefs.forEach(([k]) => {
+                    b[k] = Number($('st' + id + k).value) || 0;
+                });
+
+                const r = await api('/api/admin/stats', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(b)
+                });
+
+                statDefs.forEach(([k]) => {
+                    if (r.stats && r.stats[k] !== undefined) {
+                        $('st' + id + k).value = r.stats[k];
+                    }
+                });
+
+                msg('Statistics saved successfully');
+                await loadTeams();
+
+            } catch (e) {
+                msg('Statistics update failed: ' + e.message);
+            }
+        }
+        async function removePlayer(id) {
+             if (!confirm('Permanently remove this player registration? This cannot be undone.')) 
+             return; await api('/api/admin/player-remove', {
+                 method: 'POST', headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({ id }) 
+                }); 
+            loadTeams(); 
+            msg('Player registration removed') 
+            }
+            
+        $('addFixtureBtn').onclick = async () => { 
+            const b = { 
+                team1Id: $('fxTeam1').value, team2Id: $('fxTeam2').value, groupName: $('fxGroup').value, matchNo: $('fxNo').value, date: $('fxDate').value, time: $('fxTime').value, venue: $('fxVenue').value, status: $('fxStatus').value, score1: $('fxScore1').value, score2: $('fxScore2').value, liveUrl: $('fxLive').value 
+            }; 
+            await api('/api/admin/fixture', { 
+                
+                
+                method: 'POST', headers: { 
+                    'Content-Type': 'application/json' 
+                }, 
+                
+                body: JSON.stringify(b) 
+            }); 
+            msg('Fixture added'); 
+            loadFixtures() 
+        }; 
+        async function loadFixtures() { 
+            const f = await api('/api/admin/fixtures'); $('fixtures').innerHTML = f.map(x => `<details class=card><summary>#${x.match_no || '-'} ${esc(x.team1 || 'TBA')} vs ${esc(x.team2 || 'TBA')} — ${esc(x.status)}</summary><div class=row><input id="fd${x.id}" type=date value="${x.match_date || ''}"><input id="ft${x.id}" type=time value="${x.match_time || ''}"><input id="fv${x.id}" value="${esc(x.venue || '')}" placeholder="Venue"></div><div class=row><input id="fs1${x.id}" type=number value="${x.score1 ?? ''}" placeholder="Score 1"><input id="fs2${x.id}" type=number value="${x.score2 ?? ''}" placeholder="Score 2"><select id="fst${x.id}"><option ${x.status === 'Upcoming' ? 'selected' : ''}>Upcoming</option><option ${x.status === 'Completed' ? 'selected' : ''}>Completed</option><option ${x.status === 'Postponed' ? 'selected' : ''}>Postponed</option><option ${x.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option></select></div><input id="fl${x.id}" value="${esc(x.live_url || '')}" placeholder="Live URL"><button onclick="updateFixture(${x.id})">UPDATE</button> <button class=danger onclick="removeFixture(${x.id})">REMOVE</button></details>`).join('') || '<p class=muted>No fixtures.</p>' 
+        } 
+            
+        async function updateFixture(id) { 
+            await api('/api/admin/fixture-update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, date: $('fd' + id).value, time: $('ft' + id).value, venue: $('fv' + id).value, status: $('fst' + id).value, score1: $('fs1' + id).value, score2: $('fs2' + id).value, liveUrl: $('fl' + id).value }) }); msg('Fixture/result updated successfully.'); loadFixtures() 
+        } 
+        async function removeFixture(id) { 
+            if (confirm('Remove this fixture?')) { await api('/api/admin/fixture-remove', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) }); loadFixtures()
+
+        }}
+    
+        async function restoreAdminSession() {
+            try {
+                const u = await api('/api/me');
+
+                if (u && u.role === 'admin') {
+                    $('login').classList.add('hidden');
+                    $('panel').classList.remove('hidden');
+
+                    await loadAll();
+                }
+            } catch (e) {
+                console.warn('Session restore failed:', e.message);
+            }
+        }
+        restoreAdminSession();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>GFL Team Dashboard</title>
+    <style>
+        :root {
+            --navy: #08264d;
+            --navy2: #0d3568;
+            --blue: #1769aa;
+            --blue-soft: #eaf3fb;
+            --ink: #12243a;
+            --muted: #64748b;
+            --line: #d7e2ee;
+            --line2: #b8c9db;
+            --bg: #f5f8fc;
+            --white: #fff;
+            --danger: #b4233c;
+            --ok: #147a55;
+            --orange: #a65b16;
+            --shadow: 0 10px 28px rgba(8, 38, 77, .08);
+            --radius: 16px
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background: var(--bg)
+        }
+
+        a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 800
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .wrap {
+            max-width: 1380px;
+            margin: auto;
+            padding: 0 28px
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, .97);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(12px)
+        }
+
+        .topbar-inner {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: var(--navy);
+            color: #fff;
+            font-size: 20px;
+            font-weight: 900
+        }
+
+        .brand h1 {
+            font-size: 16px;
+            margin: 0;
+            color: var(--navy)
+        }
+
+        .brand p {
+            margin: 3px 0 0;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap
+        }
+
+        .nav-links a {
+            color: #3c5068;
+            padding: 8px 10px;
+            border-radius: 9px;
+            font-size: 12px
+        }
+
+        .nav-links a:hover {
+            background: var(--blue-soft);
+            color: var(--navy);
+            text-decoration: none
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 12px;
+            border-radius: 9px;
+            background: var(--navy);
+            color: #fff !important;
+            border: 1px solid var(--navy)
+        }
+
+        .nav-btn.ghost {
+            background: #fff;
+            color: var(--navy) !important;
+            border-color: var(--line2)
+        }
+
+        .nav-toggle {
+            display: none;
+            background: var(--navy);
+            color: #fff;
+            border: 0;
+            padding: 9px 12px;
+            border-radius: 9px;
+            font-weight: 900
+        }
+
+        .mobile-nav {
+            display: none;
+            border-top: 1px solid var(--line);
+            padding: 8px 15px;
+            gap: 5px;
+            overflow: auto;
+            background: #fff
+        }
+
+        .mobile-nav a {
+            white-space: nowrap;
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: #3c5068;
+            font-size: 12px
+        }
+
+        .mobile-nav a:hover {
+            background: var(--blue-soft);
+            text-decoration: none
+        }
+
+        main {
+            padding-bottom: 35px
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 14px 0;
+            box-shadow: var(--shadow)
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden
+        }
+
+        .hero:after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: #1769aa0d;
+            filter: blur(20px);
+            right: -60px;
+            top: -80px;
+            pointer-events: none
+        }
+
+        .hero h2 {
+            color: var(--navy);
+            margin-top: 0
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px
+        }
+
+        .field {
+            display: block;
+            margin: 12px 0;
+            font-weight: 750;
+            font-size: 13px;
+            color: var(--ink)
+        }
+
+        .hint {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 400
+        }
+
+        .required {
+            color: var(--blue)
+        }
+
+        input,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-top: 6px;
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid var(--line2);
+            border-radius: 10px;
+            outline: none
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px #1769aa18
+        }
+
+        input[type=checkbox] {
+            accent-color: var(--navy)
+        }
+
+        button {
+            padding: 11px 16px;
+            background: var(--navy);
+            color: #fff;
+            border: 1px solid var(--navy);
+            border-radius: 10px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 14px rgba(8, 38, 77, .12)
+        }
+
+        button:hover {
+            background: var(--navy2);
+            transform: translateY(-1px)
+        }
+
+        button:disabled {
+            opacity: .55;
+            cursor: not-allowed
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        .hidden {
+            display: none
+        }
+
+        .err {
+            color: var(--danger)
+        }
+
+        .ok {
+            color: var(--ok)
+        }
+
+        .player-card {
+            position: relative;
+            overflow: hidden
+        }
+
+        .player-head {
+            display: flex;
+            gap: 13px;
+            align-items: center
+        }
+
+        .avatar {
+            width: 68px;
+            height: 78px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #eef4f9;
+            border: 1px solid var(--line)
+        }
+
+        .player-name {
+            font-weight: 900;
+            font-size: 16px;
+            color: var(--navy)
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 99px;
+            background: #edf3f8;
+            color: #52657a;
+            font-size: 10px;
+            font-weight: 800
+        }
+
+        .approved {
+            background: #e9f7f0;
+            color: var(--ok)
+        }
+
+        .correction {
+            background: #fff4e8;
+            color: var(--orange)
+        }
+
+        .rejected {
+            background: #fff0f2;
+            color: var(--danger)
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px
+        }
+
+        .actions a,
+        .actions button {
+            font-size: 11px;
+            padding: 8px 10px
+        }
+
+        .actions a {
+            border: 1px solid var(--line2);
+            border-radius: 8px;
+            background: #f8fbfd;
+            color: var(--navy)
+        }
+
+        .actions a:hover {
+            text-decoration: none;
+            background: var(--blue-soft)
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 7px;
+            margin-top: 12px
+        }
+
+        .stat {
+            background: #f7fafd;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            padding: 8px
+        }
+
+        .stat small {
+            display: block;
+            color: var(--muted);
+            font-size: 9px
+        }
+
+        .stat b {
+            font-size: 14px;
+            color: var(--navy)
+        }
+
+        .notice {
+            padding: 10px 12px;
+            border-left: 3px solid var(--blue);
+            background: var(--blue-soft);
+            border-radius: 8px;
+            font-size: 12px
+        }
+
+        .section-nav {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin: 0 0 18px
+        }
+
+        .section-nav a {
+            padding: 8px 11px;
+            border: 1px solid var(--line2);
+            border-radius: 9px;
+            background: #fff;
+            color: var(--navy);
+            font-size: 11px
+        }
+
+        .section-nav a:hover {
+            text-decoration: none;
+            background: var(--blue-soft)
+        }
+
+        @media(max-width:1000px) {
+            .nav-links {
+                display: none
+            }
+
+            .nav-toggle {
+                display: inline-flex
+            }
+
+            .mobile-nav.open {
+                display: flex
+            }
+        }
+
+        @media(max-width:850px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(max-width:650px) {
+            .wrap {
+                padding-left: 15px;
+                padding-right: 15px
+            }
+
+            .topbar-inner {
+                min-height: 62px
+            }
+
+            .brand h1 {
+                font-size: 14px
+            }
+
+            .card {
+                padding: 16px
+            }
+
+            .actions {
+                gap: 6px
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            html {
+                scroll-behavior: auto
+            }
+
+            * {
+                transition: none !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="wrap topbar-inner">
+            <div class="brand">
+                <div class="brand-mark">⚽</div>
+                <div>
+                    <h1>GFL Team Dashboard</h1>
+                    <p>Team management & player registration</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a class="nav-btn ghost" href="/">HOME</a>
+                <a class="nav-btn" href="/admin.html">ADMIN</a>
+            </nav>
+            <button class="nav-toggle" id="navToggle">MENU ☰</button>
+        </div>
+        <nav class="mobile-nav" id="mobileNav">
+            <a href="/">HOME</a>
+            <a href="/admin.html">ADMIN</a>
+        </nav>
+    </header>
+
+    <main class="wrap">
+        <section id="login" class="card hero">
+            <h2>Team Login</h2>
+            <p class="muted">Use the registered Gmail / Team ID and the password created during registration.</p>
+            <label class="field">Registered Gmail / Team ID
+                <input id="teamId" type="email" placeholder="Enter your registered Gmail" autocomplete="username">
+            </label>
+            <label class="field">Password
+                <input id="teamPw" type="password" placeholder="Enter your password" autocomplete="current-password">
+            </label>
+            <label><input id="showPw" type="checkbox" style="width:auto;margin-right:6px"> Show password</label><br><br>
+            <button id="loginBtn">LOGIN</button>
+            <p id="loginMsg"></p>
+        </section>
+
+        <section id="dash" class="hidden">
+            <div class="card hero">
+                <div class="section-nav"><a href="#playerForm">Register Player</a><a href="#players">My Players</a>
+                </div>
+                <h2 id="teamName"></h2>
+                <p id="teamMeta" class="muted"></p>
+                <button id="logoutBtn">LOGOUT</button>
+            </div>
+
+            <div class="grid">
+                <form id="playerForm" class="card" enctype="multipart/form-data">
+                    <h2>Register Player</h2>
+                    <p class="hint">Photo and document are optional. Photo: JPG/JPEG up to 1 MB. Document: JPG/JPEG/PDF
+                        up to 1 MB. You can also provide a document number.</p>
+                    <label class="field">Full Name <span class="required">*</span><input name="name" required
+                            placeholder="Full name"></label>
+                    <label class="field">Date of Birth <span class="required">*</span><input id="dob" name="dob"
+                            type="date" required></label>
+                    <label class="field">Age <span class="hint">(calculated automatically)</span><input id="age"
+                            name="age" type="number" readonly></label>
+                    <label class="field">Mobile Number<input name="mobile" type="tel"
+                            placeholder="Mobile number"></label>
+                    <label class="field">Jersey Number<input name="jersey" type="number" min="0" max="99"
+                            placeholder="Jersey number"></label>
+                    <label class="field">Position <span class="required">*</span><select name="position" required>
+                            <option value="">Select position</option>
+                            <option>Goalkeeper</option>
+                            <option>Defender</option>
+                            <option>Full Back</option>
+                            <option>Centre Back</option>
+                            <option>Midfielder</option>
+                            <option>Winger</option>
+                            <option>Attacking Midfielder</option>
+                            <option>Defensive Midfielder</option>
+                            <option>Forward</option>
+                            <option>Striker</option>
+                        </select></label>
+                    <label class="field">Player Photo <span class="hint">(Optional — JPG/JPEG, maximum 1
+                            MB)</span><input id="playerPhoto" name="photo" type="file"
+                            accept=".jpg,.jpeg,image/jpeg"></label>
+                    <label class="field">Document Number <span class="hint">(Optional)</span><input id="documentNo"
+                            name="documentNo" placeholder="Document / ID number"></label>
+                    <label class="field">Player Document <span class="hint">(Optional — JPG/JPEG/PDF, maximum 1
+                            MB)</span><input id="playerDocument" name="document" type="file"
+                            accept=".jpg,.jpeg,.pdf,image/jpeg,application/pdf"></label>
+                    <button id="playerSubmit" type="submit">SUBMIT PLAYER</button>
+                    <p id="playerOut"></p>
+                </form>
+
+                <section id="players" class="card">
+                    <h2>My Players</h2>
+                    <div id="players"></div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('navToggle').onclick = () => {
+            document.getElementById('mobileNav').classList.toggle('open');
+        };
+        document.querySelectorAll('#mobileNav a').forEach(a => {
+            a.onclick = () => document.getElementById('mobileNav').classList.remove('open');
+        });
+    </script>
+    <script>
+        const $ = id => document.getElementById(id); async function api(url, opt = {}) { const r = await fetch(url, opt); let j = {}; try { j = await r.json() } catch { } if (!r.ok) throw Error(j.error || 'Request failed.'); return j } function calculateAge() { const v = $('dob').value; if (!v) { $('age').value = ''; return } const d = new Date(v + 'T00:00:00'), now = new Date(); let a = now.getFullYear() - d.getFullYear(), m = now.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && now.getDate() < d.getDate())) a--; $('age').value = (a > 0 && a <= 100) ? a : '' } async function doLogin() { const b = $('loginBtn'); b.disabled = true; $('loginMsg').textContent = 'Signing in...'; try { const u = await api('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: $('teamId').value.trim(), password: $('teamPw').value }) }); if (u.role !== 'team') throw Error('Please use the Team Login.'); $('login').classList.add('hidden'); $('dash').classList.remove('hidden'); $('teamName').textContent = u.name; $('teamMeta').textContent = 'Team ID: ' + u.code; await loadPlayers() } catch (e) { $('loginMsg').className = 'err'; $('loginMsg').textContent = e.message } finally { b.disabled = false } } async function loadPlayers() { const p = await api('/api/my-players'); $('players').innerHTML = p.map(x => `<article class="card player-card"><div class="player-head">${x.photo_available ? `<img class="avatar" src="/api/private/player/${x.id}/photo" alt="${esc(x.name)}">` : '<div class="avatar" aria-label="No photo">⚽</div>'}<div><div class="player-name">${esc(x.name)}</div><div class="muted">Age ${x.age || '-'} • Jersey ${x.jersey || '-'} • ${esc(x.position || '-')}</div><span class="status ${x.status === 'Approved' ? 'approved' : x.status === 'Correction Required' ? 'correction' : x.status === 'Rejected' ? 'rejected' : ''}">${esc(x.status)}</span></div></div>${x.correction_reason ? `<div class="notice" style="margin-top:10px">Correction required: ${esc(x.correction_reason)}</div>` : ''}<p class="muted" style="font-size:11px">Registration: GFL-2026-${String(x.id).padStart(4, '0')}</p><div class="actions">${x.photo_available ? `<a href="/api/private/player/${x.id}/photo" target="_blank">VIEW PHOTO</a>` : ''}${x.document_available ? `<a href="/api/private/player/${x.id}/document" target="_blank">VIEW DOCUMENT</a>` : ''}${x.status === 'Approved' ? `<a href="/api/id-card/${x.id}" target="_blank">VIEW / PRINT ID CARD</a>` : ''}${x.status === 'Correction Required' ? `<button type="button" onclick="editPlayer(${x.id})">EDIT & RESUBMIT</button>` : ''}</div><div class="stats"><div class="stat"><small>Matches</small><b>${x.matches || 0}</b></div><div class="stat"><small>Goals</small><b>${x.goals || 0}</b></div><div class="stat"><small>Assists</small><b>${x.assists || 0}</b></div><div class="stat"><small>Tackles</small><b>${x.tackles || 0}</b></div></div></article>`).join('') || '<p class="muted">No players registered.</p>' } function esc(x) { return String(x ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])) } async function editPlayer(id) { const p = await api('/api/my-players'), x = p.find(v => v.id === id); if (!x) return; const f = $('playerForm'); f.elements.name.value = x.name || ''; f.elements.dob.value = x.dob || ''; f.elements.mobile.value = x.mobile || ''; f.elements.jersey.value = x.jersey || ''; f.elements.position.value = x.position || ''; f.elements.documentNo.value = x.document_no || ''; calculateAge(); f.dataset.editId = id; $('playerSubmit').textContent = 'UPDATE & RESUBMIT PLAYER'; $('playerOut').textContent = 'Correction mode: update the details and optionally replace the photo/document.'; window.scrollTo({ top: f.offsetTop - 20, behavior: 'smooth' }) } $('loginBtn').onclick = doLogin; $('teamPw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin() }); $('showPw').onchange = e => $('teamPw').type = e.target.checked ? 'text' : 'password'; $('dob').addEventListener('change', calculateAge); $('logoutBtn').onclick = async () => { await api('/api/logout', { method: 'POST' }); location.reload() }; $('playerForm').onsubmit = async e => {
+            e.preventDefault(); const f = $('playerForm'), o = $('playerOut'), b = $('playerSubmit'); o.textContent = 'Submitting...'; b.disabled = true; try {
+                calculateAge(); if (!f.elements.name.value.trim()) throw Error('Player name is required.'); if (!f.elements.dob.value) throw Error('Date of birth is required.'); if (!f.elements.position.value) throw Error('Please select a player position.'); const photo = $('playerPhoto').files[0], doc = $('playerDocument').files[0]; if (photo && photo.size > 1048576) throw Error('The player photo must be 1 MB or smaller.'); if (doc && doc.size > 1048576) throw Error('The player document must be 1 MB or smaller.');
+
+                const fd = new FormData(f);
+
+                fd.set('age', $('age').value);
+
+                const photoInput = $('playerPhoto');
+                const documentInput = $('playerDocument');
+
+                if (photoInput.files && photoInput.files.length > 0) {
+                    const photoFile = photoInput.files[0];
+
+                    fd.set('photo', photoFile);
+                } else {
+                    console.log('[UPLOAD] No photo selected');
+                }
+
+                if (documentInput.files && documentInput.files.length > 0) {
+                    const documentFile = documentInput.files[0];
+
+                    fd.set('document', documentFile);
+                }
+
+                const editId = f.dataset.editId; if (editId) fd.set('id', editId);
+
+                const uploadUrl = editId
+                    ? '/api/my-player-update'
+                    : '/api/players';
+
+                const response = await fetch(uploadUrl, {
+                    method: 'POST',
+                    body: fd
+                });
+
+                const responseText = await response.text();
+
+                let j = {};
+
+                try {
+                    j = JSON.parse(responseText);
+                } catch {
+                    throw Error(responseText || 'Invalid server response');
+                }
+
+                if (!response.ok) {
+                    throw Error(j.error || 'Request failed.');
+                }
+
+                o.className = 'ok'; o.textContent = editId ? 'Player updated and resubmitted successfully.' : 'Player submitted successfully. Registration: ' + j.registration; f.reset(); delete f.dataset.editId; $('age').value = ''; b.textContent = 'SUBMIT PLAYER'; await loadPlayers()
+            } catch (e) { o.className = 'err'; o.textContent = e.message } finally { b.disabled = false }
+        };
+
+        async function restoreTeamSession() {
+            try {
+                console.log('[AUTH] Checking existing team session...');
+
+                const u = await api('/api/me');
+
+                console.log('[AUTH] /api/me response:', u);
+
+                if (u && u.role === 'team') {
+                    console.log('[AUTH] Existing team session found.');
+
+                    $('login').classList.add('hidden');
+                    $('dash').classList.remove('hidden');
+
+                    $('teamName').textContent = u.name || '';
+                    $('teamMeta').textContent = 'Team ID: ' + (u.code || '');
+
+                    await loadPlayers();
+
+                    console.log('[AUTH] Team dashboard restored.');
+                } else {
+                    console.log('[AUTH] No existing team session.');
+                }
+
+            } catch (e) {
+                console.warn('[AUTH] Team session restore failed:', e.message);
+            }
+        }
+
+        restoreTeamSession();
+    </script>
+</body>
+
+</html>
